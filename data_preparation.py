@@ -109,11 +109,12 @@ def deconvolution_n2_case2(arrival_curve: PiecewiseLinearArrivalCurve, service_c
     case_IIa_y = linear_function(r=r2, a=t1, b=(R * (T - t1) + b2), values=case_IIa_x)
 
     # Case IIb:
-    i = ((r2 - R) * t1 + (R - r1) * T + b2 - b1) / (r1 - r2)
+    # Case IIba
     if r1 <= R:
-        # Case IIbba:
-        case_IIbba_x = list(np.arange(-t1, i + 0.01, 0.01))
-        case_IIbba_y = linear_function(r=r2, a=t1, b=(R * (T - t1) + b2), values=case_IIbba_x)
+        i = ((r2 - R) * t1 + (R - r1) * T + b2 - b1) / (r1 - r2)
+        # Case IIbaa:
+        case_IIbaa_x = list(np.arange(-t1, i + 0.01, 0.01))
+        case_IIbaa_y = linear_function(r=r2, a=t1, b=(R * (T - t1) + b2), values=case_IIbaa_x)
 
         # Case IIbab:
         case_IIbab_x = list(np.arange(i, x_axis_max + 0.01, 0.01))
@@ -123,16 +124,22 @@ def deconvolution_n2_case2(arrival_curve: PiecewiseLinearArrivalCurve, service_c
                 [arrival_curve_x, arrival_curve_y],
                 [gamma_2_dotted_x, gamma_2_dotted_y],
                 [case_IIa_x, case_IIa_y],
-                [case_IIbba_x, case_IIbba_y],
+                [case_IIbaa_x, case_IIbaa_y],
                 [case_IIbab_x, case_IIbab_y]]
+    # Case IIbb
     else:
-        # Case IIbb:
-        case_IIbb_x = list(np.arange(-t1, x_axis_max + 0.01, 0.01))
-        case_IIbb_y = linear_function(r=r1, a=t1, b=(R * (T - t1) + b1), values=case_IIbb_x)
+        i = 0.0
+        # Case IIbba:
+        case_IIbba_x = list(np.arange(-t1, i + 0.01, 0.01))
+        case_IIbba_y = linear_function(r=r2, a=t1, b=(R * (T - t1) + b2), values=case_IIbba_x)
+
+        # Case IIbbb:
+        case_IIbbb_x = list(np.arange(i, x_axis_max + 0.01, 0.01))
+        case_IIbbb_y = linear_function(r=r1, a=t1, b=(R * (T - t1) + b1), values=case_IIbbb_x)
 
         return [[service_curve_x, service_curve_y],
                 [arrival_curve_x, arrival_curve_y],
                 [gamma_2_dotted_x, gamma_2_dotted_y],
                 [case_IIa_x, case_IIa_y],
-                [case_IIbb_x, case_IIbb_y]]
-
+                [case_IIbba_x, case_IIbba_y],
+                [case_IIbbb_x, case_IIbbb_y]]

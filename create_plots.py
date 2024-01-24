@@ -54,7 +54,7 @@ def create_plot_deconvolution_n2_case2(arrival_curve: PiecewiseLinearArrivalCurv
     data = data_preparation.deconvolution_n2_case2(arrival_curve, service_curve, x_axis_range)
 
     # create a new plot with a title and axis labels
-    p = figure(title="Deconvolution (n=2, Case I)", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Deconvolution (n=2, Case II)", x_axis_label="x", y_axis_label="y")
 
     # add multiple renderers
     p.line(data[0][0], data[0][1], color="red", line_width=2)
@@ -70,6 +70,7 @@ def create_plot_deconvolution_n2_case2(arrival_curve: PiecewiseLinearArrivalCurv
     else:
         p.line(data[3][0], data[3][1], color="green", line_width=2)
         p.line(data[4][0], data[4][1], color="green", line_width=2)
+        p.line(data[5][0], data[5][1], color="green", line_width=2)
 
     # plot settings
     p.x_range.start = x_axis_range[0]
