@@ -1,8 +1,10 @@
 from arrival_curves import *
 from services_curves import *
-from bokeh.plotting import figure
+import deconvolution_calculator
 
+from bokeh.plotting import figure
 import numpy as np
+from typing import List
 
 
 def plot_arrival_curve_token_bucket(p: figure, arrival_curve: TokenBucketArrivalCurve, x_max: int):
@@ -54,3 +56,14 @@ def plot_service_curve_rate_latency(p: figure, service_curve: RateLatencyService
         value_data.append(service_curve.calculate_function_value(t))
 
     p.line(t_data, value_data, color="red", line_width=2)
+
+
+def plot_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
+                          service_curve: RateLatencyServiceCurve, x_range: List[int]):
+    t_data = []
+    value_data = []
+    for t in list(np.arange(x_range[0], x_range[1] + 0.01, 0.01)):
+        t_data.append(t)
+        value_data.append(deconvolution_calculator.deconvolution_n2(pwl=arrival_curve, sc=service_curve, t=t))
+
+    p.line(t_data, value_data, color="green", line_width=2)

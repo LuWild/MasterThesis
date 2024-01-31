@@ -117,19 +117,20 @@ def create_plot(pwl: PiecewiseLinearArrivalCurve, sc: RateLatencyServiceCurve, d
 def print_important_information(pwl: PiecewiseLinearArrivalCurve, sc: RateLatencyServiceCurve):
     print("Important Information about the setting:")
     print("t1 = %f" % pwl.intersections[0])
-    print("-t1 = %f" % -pwl.intersections[0])
     print("T = %f" % sc.latency)
-    print("-T = %f" % -sc.latency)
+    dif = pwl.intersections[0]-sc.latency
+    print("t1-T = %f" % dif)
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=2, burst=3)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=12)
+    tb1 = TokenBucketArrivalCurve(rate=1.0, burst=8)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=10)
+    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=14)
     pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
-    sc = RateLatencyServiceCurve(rate=1.5, latency=4)
+    sc = RateLatencyServiceCurve(rate=1.5, latency=5)
 
-    t = [-15, 20, 0.01]
-    s = [-50, 50, 0.01]
+    t = [-15, 20, 0.1]
+    s = [0, 100, 0.1]
     print("Starting Solution Check")
     print("...")
     deconvolution_n2_solution_check(pwl=pwl, sc=sc,
