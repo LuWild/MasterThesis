@@ -2,27 +2,27 @@ from arrival_curves import *
 from services_curves import *
 
 
-def deconvolution_n2(pwl: PiecewiseLinearArrivalCurve, sc: RateLatencyServiceCurve, t: float):
+def deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):
     """
     Calculates the deconvolution of a PiecewiseLinearArrivalCurve (n=2) and a RateLatencyServiceCurve for
     the given value t.
 
-    :param pwl: PiecewiseLinearArrivalCurve
-    :param sc: RateLatencyServiceCurve
+    :param arrival_curve: PiecewiseLinearArrivalCurve
+    :param service_curve: RateLatencyServiceCurve
     :param t: value t
-    :return: deconvolution of pwl and sc of t
+    :return: deconvolution of PiecewiseLinearArrivalCurve and RateLatencyServiceCurve of t
     """
 
-    R = sc.rate
-    T = sc.latency
+    R = service_curve.rate
+    T = service_curve.latency
 
-    r1 = pwl.gammas[0].rate
-    b1 = pwl.gammas[0].burst
+    r1 = arrival_curve.gammas[0].rate
+    b1 = arrival_curve.gammas[0].burst
 
-    r2 = pwl.gammas[1].rate
-    b2 = pwl.gammas[1].burst
+    r2 = arrival_curve.gammas[1].rate
+    b2 = arrival_curve.gammas[1].burst
 
-    t1 = pwl.intersections[0]
+    t1 = arrival_curve.intersections[0]
 
     if t <= (t1 - T):
         if r1 <= R:

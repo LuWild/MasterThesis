@@ -15,7 +15,8 @@ if __name__ == '__main__':
 
     t = [-15, 20, 0.1]
     s = [0, 100, 0.1]
-    solution_checker.deconvolution_n2_solution_checker.deconvolution_n2_solution_check(pwl=pwl, sc=sc,
+    solution_checker.deconvolution_n2_solution_checker.deconvolution_n2_solution_check(arrival_curve=pwl,
+                                                                                       service_curve=sc,
                                                                                        t_start=t[0],
                                                                                        t_end=t[1],
                                                                                        t_step=t[2],

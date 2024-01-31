@@ -1,6 +1,3 @@
-import calculator
-
-
 class RateLatencyServiceCurve:
     def __init__(self, rate: float, latency: float):
         self.rate = rate
@@ -13,4 +10,9 @@ class RateLatencyServiceCurve:
         :param t: value t for which f(t) is calculated
         :return: the calculated value f(t) for the given t
         """
-        return calculator.rate_latency_function(R=self.rate, T=self.latency, values=[t])[0]
+        R = self.rate
+        T = self.latency
+        if t <= T:
+            return 0
+        else:
+            return R * (t - T)

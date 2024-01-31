@@ -36,11 +36,17 @@ class PiecewiseLinearArrivalCurve:
         :param t: value t for which f(t) is calculated
         :return: the calculated value f(t) for the given t
         """
-        import calculator
         if t <= 0:
             return 0
         else:
-            return calculator.piecewise_linear_function(self, [t])[0]
+            f_t_min = float('inf')
+            for gamma in self.gammas:
+                r = gamma.rate
+                b = gamma.burst
+                f_t = r * t + b
+                if f_t < f_t_min:
+                    f_t_min = f_t
+            return f_t_min
 
     def get_used_gamma(self, t: float):
         """
@@ -66,7 +72,6 @@ class PiecewiseLinearArrivalCurve:
         for i in range(0, len(self.gammas)):
             if self.gammas[i].rate == gamma_used.rate and self.gammas[i].burst == gamma_used.burst:
                 return i + 1
-
 
     def __get_list_of_all_intersections(self):
         intersections = []

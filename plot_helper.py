@@ -9,11 +9,12 @@ from typing import List
 
 def plot_arrival_curve_token_bucket(p: figure, arrival_curve: TokenBucketArrivalCurve, x_max: int):
     """
+    Adds the line to figure p for the arrival curve.
 
-    :param p:
-    :param arrival_curve:
-    :param x_max:
-    :return:
+    :param p: figure
+    :param arrival_curve: TokenBucketArrivalCurve
+    :param x_max: for which value the line is plotted
+    :return: -
     """
     t_data = [0]
     value_data = [arrival_curve.burst]
@@ -26,11 +27,12 @@ def plot_arrival_curve_token_bucket(p: figure, arrival_curve: TokenBucketArrival
 
 def plot_arrival_curve_piecewise_linear(p: figure, arrival_curve: PiecewiseLinearArrivalCurve, x_max: int):
     """
+    Adds the line to figure p for the arrival curve.
 
-    :param p:
-    :param arrival_curve:
-    :param x_max:
-    :return:
+    :param p: figure
+    :param arrival_curve: PiecewiseLinearArrivalCurve
+    :param x_max: for which value the line is plotted
+    :return: -
     """
     t_data = [0]
     value_data = [arrival_curve.gammas[0].burst]
@@ -43,11 +45,12 @@ def plot_arrival_curve_piecewise_linear(p: figure, arrival_curve: PiecewiseLinea
 
 def plot_service_curve_rate_latency(p: figure, service_curve: RateLatencyServiceCurve, x_max: int):
     """
+    Adds the line to figure p for the service curve.
 
-    :param p:
-    :param service_curve:
-    :param x_max:
-    :return:
+    :param p: figure
+    :param service_curve: RateLatencyServiceCurve
+    :param x_max: for which value the line is plotted
+    :return: -
     """
     t_data = []
     value_data = []
@@ -59,11 +62,21 @@ def plot_service_curve_rate_latency(p: figure, service_curve: RateLatencyService
 
 
 def plot_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
-                          service_curve: RateLatencyServiceCurve, x_range: List[int]):
+                          service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
+    """
+    Adds the line to figure p for the deconvolution (n=2).
+
+    :param p: figure
+    :param arrival_curve: PiecewiseLinearArrivalCurve
+    :param service_curve: RateLatencyServiceCurve
+    :param x_axis_range: for which value range the line is plotted
+    :return: -
+    """
     t_data = []
     value_data = []
-    for t in list(np.arange(x_range[0], x_range[1] + 0.01, 0.01)):
+    for t in list(np.arange(x_axis_range[0], x_axis_range[1] + 0.01, 0.01)):
         t_data.append(t)
-        value_data.append(deconvolution_calculator.deconvolution_n2(pwl=arrival_curve, sc=service_curve, t=t))
+        value_data.append(deconvolution_calculator.deconvolution_n2(arrival_curve=arrival_curve,
+                                                                    service_curve=service_curve, t=t))
 
     p.line(t_data, value_data, color="green", line_width=2)
