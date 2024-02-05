@@ -38,3 +38,18 @@ def deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: 
     else:
         # print("Used Case: II")
         return r2 * (t + T) + b2
+
+
+def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):
+    R = service_curve.rate
+    T = service_curve.latency
+
+    ta_and_gamma = arrival_curve.calculate_intersection_t_a_and_gamma_a(R=R)
+    ta = ta_and_gamma[0]
+    ra = ta_and_gamma[1].rate
+    ba = ta_and_gamma[1].burst
+
+    if t <= ta - T:
+        return R * (t + T - ta) + ba + ra * ta
+    else:
+        return arrival_curve.calculate_function_value(t=t + T)

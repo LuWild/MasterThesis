@@ -80,3 +80,25 @@ def plot_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
                                                                     service_curve=service_curve, t=t))
 
     p.line(t_data, value_data, color="green", line_width=2)
+
+
+def plot_deconvolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
+                       service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
+    """
+    Adds the line to figure p for the deconvolution (n=n).
+
+    :param p: figure
+    :param arrival_curve: PiecewiseLinearArrivalCurve
+    :param service_curve: RateLatencyServiceCurve
+    :param x_axis_range: for which value range the line is plotted
+    :return: -
+    """
+    t_data = []
+    value_data = []
+    for t in list(np.arange(x_axis_range[0], x_axis_range[1] + 0.01, 0.01)):
+        t_data.append(t)
+        value_data.append(deconvolution_calculator.deconvolution(arrival_curve=arrival_curve,
+                                                                 service_curve=service_curve, t=t))
+
+    p.line(t_data, value_data, color="green", line_width=2)
+

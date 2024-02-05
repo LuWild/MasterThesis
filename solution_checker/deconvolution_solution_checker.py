@@ -10,9 +10,9 @@ from selenium import webdriver
 import chromedriver_binary  # Adds chromedriver binary to path
 
 
-def deconvolution_n2_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve,
-                                    t_start: float, t_end: float, t_step: float,
-                                    s_start: float, s_end: float, s_step: float):
+def deconvolution_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve,
+                                 t_start: float, t_end: float, t_step: float,
+                                 s_start: float, s_end: float, s_step: float):
     """
     Brute forced way to calculate the deconvolution (n=2). Checks all combinations of t and s.
     Creates a .svg and a .html with the plot and a .csv with the values and calculation results.
@@ -53,17 +53,17 @@ def deconvolution_n2_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, 
 
     column_names = ["t", "s", "alpha(t+s)-beta(s)", "alpha(t+s)", "beta(s)", "gamma_used"]
     if "solution_checker" in os.getcwd():
-        create_csv_file(file_name="../csv_files/deconvolution_n2_solution_check.csv",
+        create_csv_file(file_name="../csv_files/deconvolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
     else:
-        create_csv_file(file_name="csv_files/deconvolution_n2_solution_check.csv",
+        create_csv_file(file_name="csv_files/deconvolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
 
     plot_data = [t_values, function_values]
     create_plot(arrival_curve=arrival_curve, service_curve=service_curve,
                 data=plot_data, x_axis_range=[int(t_start) - 1, int(t_end) + 1], y_axis_max=25)
 
-    print_important_information(arrival_curve=arrival_curve, service_curve=service_curve)
+    # print_important_information(arrival_curve=arrival_curve, service_curve=service_curve)
 
 
 def create_csv_file(file_name: str, column_names: List[str], data: List[list]):
@@ -81,7 +81,7 @@ def create_csv_file(file_name: str, column_names: List[str], data: List[list]):
 
 def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, data: List[list],
                 x_axis_range: List[int], y_axis_max: int):
-    p = figure(title="Deconvolution Solution Checker (n=2)", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Deconvolution Solution Checker", x_axis_label="x", y_axis_label="y")
 
     plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
     plot_service_curve_rate_latency(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
@@ -101,17 +101,17 @@ def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
 
     # show the results
     if "solution_checker" in os.getcwd():
-        output_file(filename="../plots/html_files/deconvolution_n2_solution_check.html")
+        output_file(filename="../plots/html_files/deconvolution_solution_check.html")
     else:
-        output_file(filename="plots/html_files/deconvolution_n2_solution_check.html")
+        output_file(filename="plots/html_files/deconvolution_solution_check.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
     if "solution_checker" in os.getcwd():
-        export_svg(p, filename="../plots/svg_files/deconvolution_n2_solution_check.svg")
+        export_svg(p, filename="../plots/svg_files/deconvolution_solution_check.svg")
     else:
-        export_svg(p, filename="plots/svg_files/deconvolution_n2_solution_check.svg")
+        export_svg(p, filename="plots/svg_files/deconvolution_solution_check.svg")
 
 
 def print_important_information(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve):
@@ -123,17 +123,18 @@ def print_important_information(arrival_curve: PiecewiseLinearArrivalCurve, serv
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=1.0, burst=8)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=10)
-    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=14)
-    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+    tb1 = TokenBucketArrivalCurve(rate=2.5, burst=4)
+    tb2 = TokenBucketArrivalCurve(rate=1.5, burst=5)
+    tb3 = TokenBucketArrivalCurve(rate=0.5, burst=8)
+    tb4 = TokenBucketArrivalCurve(rate=0.1, burst=12)
+    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3, tb4])
     sc = RateLatencyServiceCurve(rate=1.5, latency=5)
 
-    t = [-15, 20, 0.1]
-    s = [0, 100, 0.1]
+    t = [-15, 20, 0.01]
+    s = [0, 100, 0.01]
     print("Starting Solution Check")
     print("...")
-    deconvolution_n2_solution_check(arrival_curve=pwl, service_curve=sc,
-                                    t_start=t[0], t_end=t[1], t_step=t[2],
-                                    s_start=s[0], s_end=s[1], s_step=s[2])
+    deconvolution_solution_check(arrival_curve=pwl, service_curve=sc,
+                                 t_start=t[0], t_end=t[1], t_step=t[2],
+                                 s_start=s[0], s_end=s[1], s_step=s[2])
     print("Solution Check Completed")

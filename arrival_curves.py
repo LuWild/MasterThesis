@@ -73,6 +73,26 @@ class PiecewiseLinearArrivalCurve:
             if self.gammas[i].rate == gamma_used.rate and self.gammas[i].burst == gamma_used.burst:
                 return i + 1
 
+    def calculate_intersection_t_a_and_gamma_a(self, R):
+        """
+        Get the intersection point ta for which the following holds:
+        ra-1 > R and ra <= R
+
+        This "ta" has to exist since the s.c. must hold.
+
+        :param R: Rate R of a Rate-Latency Server
+        :return: [ta, TokenBucketArrivalCurve]
+        """
+
+        for x in range(0, len(self.gammas) - 1):
+            tb1 = self.gammas[x]
+            tb2 = self.gammas[x + 1]
+
+            if tb1.rate >= R > tb2.rate:
+                return [(tb2.burst - tb1.burst) / (tb1.rate - tb2.rate), tb2]
+            else:
+                return [0, tb1]
+
     def __get_list_of_all_intersections(self):
         intersections = []
         for x in range(0, len(self.gammas) - 1):
