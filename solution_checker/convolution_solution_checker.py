@@ -98,9 +98,9 @@ def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=1.0, burst=3)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=6)
-    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=9)
+    tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
+    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
     pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
     sc = RateLatencyServiceCurve(rate=1.0, latency=3)
 
