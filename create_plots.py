@@ -10,6 +10,30 @@ from selenium import webdriver
 import chromedriver_binary  # Adds chromedriver binary to path
 
 
+def create_plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalCurve,
+                                          service_curve: PiecewiseLinearServiceCurve,
+                                          x_axis_max: int, y_axis_max: int):
+    x_axis_min = -1
+
+    p = figure(title="Arrival and Service Curve (PWL)", x_axis_label="x", y_axis_label="y")
+
+    plot_helper.plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.plot_service_curve_piecewise_linear(p=p, service_curve=service_curve, x_max=x_axis_max)
+
+    # plot settings
+    p.x_range.start = x_axis_min - 1
+    p.x_range.end = x_axis_max + 1
+    # """
+    p.yaxis.fixed_location = 0
+    p.y_range.start = 0
+    p.y_range.end = y_axis_max
+
+    p.height = 600
+    p.width = 1000
+
+    show(p)
+
+
 def create_plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
                                  service_curve: RateLatencyServiceCurve,
                                  x_axis_range: List[int], y_axis_max: int):
@@ -113,8 +137,13 @@ if __name__ == '__main__':
     tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
     tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
     tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
-    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=5)
+    rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
+    rl3 = RateLatencyServiceCurve(rate=2.5, latency=10)
+    pwl_sc = PiecewiseLinearServiceCurve(pieces=[rl1, rl2, rl3])
+
     sc = RateLatencyServiceCurve(rate=1.0, latency=5)
 
-    create_plot_convolution(arrival_curve=pwl, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
-
+    create_plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=15, y_axis_max=25)
+    # create_plot_convolution(arrival_curve=pwl_ac, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
