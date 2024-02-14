@@ -6,14 +6,16 @@ import solution_checker.deconvolution_solution_checker
 import solution_checker.convolution_solution_checker
 
 if __name__ == '__main__':
+    #"""
     tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=9)
     tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
-    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
-    sc = RateLatencyServiceCurve(rate=1.0, latency=3)
+    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
+    sc = RateLatencyServiceCurve(rate=2.5, latency=5)
 
     create_plots.create_plot_convolution(arrival_curve=pwl, service_curve=sc,
                                          x_axis_range=[0, 35], y_axis_max=25)
+
 
     t_end = 35
     step = 0.01
@@ -23,9 +25,10 @@ if __name__ == '__main__':
                                                                              step=step)
 
     """
-    tb1 = TokenBucketArrivalCurve(rate=1.0, burst=8)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=10)
-    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=5)
+    tb2 = TokenBucketArrivalCurve(rate=1.0, burst=7)
+    tb3 = TokenBucketArrivalCurve(rate=0.5, burst=10)
+    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
     sc = RateLatencyServiceCurve(rate=1.5, latency=5)
     
     create_plots.create_plot_deconvolution(arrival_curve=pwl, service_curve=sc,

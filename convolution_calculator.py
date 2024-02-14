@@ -8,5 +8,5 @@ def convolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
     if t <= T:
         return 0
     else:
-        # still wrong
-        return min(arrival_curve.calculate_function_value(t - T), service_curve.calculate_function_value(t - T))
+        return min(arrival_curve.calculate_function_value(t - T), service_curve.calculate_function_value(t))
+

@@ -110,9 +110,11 @@ def create_plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=1.0, burst=8)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=10)
+    tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
+    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
     pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
-    sc = RateLatencyServiceCurve(rate=1.5, latency=5)
+    sc = RateLatencyServiceCurve(rate=1.0, latency=5)
 
-    create_plot_deconvolution_n2(arrival_curve=pwl, service_curve=sc, x_axis_range=[-15, 20], y_axis_max=25)
+    create_plot_convolution(arrival_curve=pwl, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
+
