@@ -66,8 +66,8 @@ def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
                 x_axis_range: List[int], y_axis_max: int):
     p = figure(title="Convolution Solution Checker", x_axis_label="x", y_axis_label="y")
 
-    plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
-    plot_service_curve_rate_latency(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
+    plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
+    plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
 
     p.line(data[0], data[1], color="green", line_width=2)
 

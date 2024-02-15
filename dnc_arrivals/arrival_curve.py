@@ -9,3 +9,7 @@ class ArrivalCurve(ABC):
     @abstractmethod
     def calculate_function_value(self, t: float) -> float:
         pass
+
+    @abstractmethod
+    def get_initial_burst(self) -> float:
+        pass

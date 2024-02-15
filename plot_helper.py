@@ -1,3 +1,5 @@
+from dnc_arrivals.arrival_curve import ArrivalCurve
+from dnc_service.service_curve import ServiceCurve
 from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
@@ -10,7 +12,7 @@ import numpy as np
 from typing import List
 
 
-def plot_arrival_curve_token_bucket(p: figure, arrival_curve: TokenBucketArrivalCurve, x_max: int):
+def plot_arrival_curve(p: figure, arrival_curve: ArrivalCurve, x_max: int):
     """
     Adds the line to figure p for the arrival curve.
 
@@ -20,7 +22,7 @@ def plot_arrival_curve_token_bucket(p: figure, arrival_curve: TokenBucketArrival
     :return: -
     """
     t_data = [0]
-    value_data = [arrival_curve.burst]
+    value_data = [arrival_curve.get_initial_burst()]
     for t in list(np.arange(0.01, x_max + 0.01, 0.01)):
         t_data.append(t)
         value_data.append(arrival_curve.calculate_function_value(t))
@@ -28,51 +30,15 @@ def plot_arrival_curve_token_bucket(p: figure, arrival_curve: TokenBucketArrival
     p.line(t_data, value_data, color="blue", line_width=2)
 
 
-def plot_arrival_curve_piecewise_linear(p: figure, arrival_curve: PiecewiseLinearArrivalCurve, x_max: int):
+def plot_service_curve(p: figure, service_curve: ServiceCurve, x_max: int):
     """
-    Adds the line to figure p for the arrival curve.
+        Adds the line to figure p for the service curve.
 
-    :param p: figure
-    :param arrival_curve: PiecewiseLinearArrivalCurve
-    :param x_max: for which value the line is plotted
-    :return: -
-    """
-    t_data = [0]
-    value_data = [arrival_curve.gammas[0].burst]
-    for t in list(np.arange(0.01, x_max + 0.01, 0.01)):
-        t_data.append(t)
-        value_data.append(arrival_curve.calculate_function_value(t))
-
-    p.line(t_data, value_data, color="blue", line_width=2)
-
-
-def plot_service_curve_rate_latency(p: figure, service_curve: RateLatencyServiceCurve, x_max: int):
-    """
-    Adds the line to figure p for the service curve.
-
-    :param p: figure
-    :param service_curve: RateLatencyServiceCurve
-    :param x_max: for which value the line is plotted
-    :return: -
-    """
-    t_data = []
-    value_data = []
-    for t in list(np.arange(0, x_max + 0.01, 0.01)):
-        t_data.append(t)
-        value_data.append(service_curve.calculate_function_value(t))
-
-    p.line(t_data, value_data, color="red", line_width=2)
-
-
-def plot_service_curve_piecewise_linear(p: figure, service_curve: PiecewiseLinearServiceCurve, x_max: int):
-    """
-    Adds the line to figure p for the service curve.
-
-    :param p: figure
-    :param service_curve: PiecewiseLinearServiceCurve
-    :param x_max: for which value the line is plotted
-    :return: -
-    """
+        :param p: figure
+        :param service_curve: RateLatencyServiceCurve
+        :param x_max: for which value the line is plotted
+        :return: -
+        """
     t_data = []
     value_data = []
     for t in list(np.arange(0, x_max + 0.01, 0.01)):

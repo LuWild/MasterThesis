@@ -6,7 +6,7 @@ class TokenBucketArrivalCurve(ArrivalCurve):
         self.rate = rate
         self.burst = burst
 
-    def calculate_function_value(self, t: float):
+    def calculate_function_value(self, t: float) -> float:
         """
         Calculates f(t) for the arrival curve object.
 
@@ -17,3 +17,6 @@ class TokenBucketArrivalCurve(ArrivalCurve):
             return 0
         else:
             return self.rate * t + self.burst
+
+    def get_initial_burst(self) -> float:
+        return self.burst

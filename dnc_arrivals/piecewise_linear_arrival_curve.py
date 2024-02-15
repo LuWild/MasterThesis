@@ -33,6 +33,9 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
                     f_t_min = f_t
             return f_t_min
 
+    def get_initial_burst(self) -> float:
+        return self.gammas[0].burst
+
     def get_used_gamma(self, t: float):
         """
         Returns the TokenBucketArrivalCurve that is used to calculate f(t) in the segment for a given t

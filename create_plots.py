@@ -16,8 +16,8 @@ def create_plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalC
 
     p = figure(title="Arrival and Service Curve (PWL)", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve_piecewise_linear(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
 
     # plot settings
     p.x_range.start = x_axis_min - 1
@@ -41,8 +41,8 @@ def create_plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
 
     p = figure(title="Deconvolution (n=2)", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve_rate_latency(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
     plot_helper.plot_deconvolution_n2(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
                                       x_axis_range=x_axis_range)
 
@@ -74,8 +74,8 @@ def create_plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
 
     p = figure(title="Deconvolution", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve_rate_latency(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
     plot_helper.plot_deconvolution(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
                                    x_axis_range=x_axis_range)
 
@@ -107,8 +107,8 @@ def create_plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
 
     p = figure(title="Convolution", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve_piecewise_linear(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve_rate_latency(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
     plot_helper.plot_convolution(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
                                  x_axis_range=x_axis_range)
 
