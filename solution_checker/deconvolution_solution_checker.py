@@ -10,7 +10,7 @@ from selenium import webdriver
 import chromedriver_binary  # Adds chromedriver binary to path
 
 
-def deconvolution_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve,
+def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
                                  t_start: float, t_end: float, t_step: float,
                                  s_start: float, s_end: float, s_step: float):
     """
@@ -47,7 +47,10 @@ def deconvolution_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, ser
         function_values.append(current_max)
         pwl_values.append(arrival_curve.calculate_function_value(t + max_s))
         sc_values.append(service_curve.calculate_function_value(max_s))
-        gamma_used.append(arrival_curve.get_used_gamma_number(t + max_s))
+        if isinstance(arrival_curve, PiecewiseLinearArrivalCurve):
+            gamma_used.append(arrival_curve.get_used_gamma_number(t + max_s))
+        else:
+            gamma_used.append(1)
 
     csv_data = [t_values, s_values_used, function_values, pwl_values, sc_values, gamma_used]
 
@@ -79,7 +82,7 @@ def create_csv_file(file_name: str, column_names: List[str], data: List[list]):
             writer.writerow(new_row)
 
 
-def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, data: List[list],
+def create_plot(arrival_curve: ArrivalCurve, service_curve: ServiceCurve, data: List[list],
                 x_axis_range: List[int], y_axis_max: int):
     p = figure(title="Deconvolution Solution Checker", x_axis_label="x", y_axis_label="y")
 
@@ -114,27 +117,22 @@ def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
         export_svg(p, filename="plots/svg_files/deconvolution_solution_check.svg")
 
 
-def print_important_information(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve):
-    print("Important Information about the setting:")
-    print("t1 = %f" % arrival_curve.intersections[0])
-    print("T = %f" % service_curve.latency)
-    dif = arrival_curve.intersections[0] - service_curve.latency
-    print("t1-T = %f" % dif)
-
-
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=2.5, burst=4)
-    tb2 = TokenBucketArrivalCurve(rate=1.5, burst=5)
-    tb3 = TokenBucketArrivalCurve(rate=0.5, burst=8)
-    tb4 = TokenBucketArrivalCurve(rate=0.1, burst=12)
-    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3, tb4])
-    sc = RateLatencyServiceCurve(rate=1.5, latency=5)
+    tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
+    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
+    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=5)
+    rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
+    rl3 = RateLatencyServiceCurve(rate=2.5, latency=10)
+    pwl_sc = PiecewiseLinearServiceCurve(pieces=[rl1, rl2, rl3])
 
     t = [-15, 20, 0.01]
     s = [0, 100, 0.01]
     print("Starting Solution Check")
     print("...")
-    deconvolution_solution_check(arrival_curve=pwl, service_curve=sc,
+    deconvolution_solution_check(arrival_curve=pwl_ac, service_curve=pwl_sc,
                                  t_start=t[0], t_end=t[1], t_step=t[2],
                                  s_start=s[0], s_end=s[1], s_step=s[2])
     print("Solution Check Completed")

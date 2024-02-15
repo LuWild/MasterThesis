@@ -10,7 +10,7 @@ from selenium import webdriver
 import chromedriver_binary  # Adds chromedriver binary to path
 
 
-def convolution_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve,
+def convolution_solution_check(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
                                t_end: float, step: float):
     t_values = list(np.arange(0, t_end+step, step))
 
@@ -32,7 +32,10 @@ def convolution_solution_check(arrival_curve: PiecewiseLinearArrivalCurve, servi
         function_values.append(current_min)
         pwl_values.append(arrival_curve.calculate_function_value(t - min_s))
         sc_values.append(service_curve.calculate_function_value(min_s))
-        gamma_used.append(arrival_curve.get_used_gamma_number(t - min_s))
+        if isinstance(arrival_curve, PiecewiseLinearArrivalCurve):
+            gamma_used.append(arrival_curve.get_used_gamma_number(t + min_s))
+        else:
+            gamma_used.append(1)
 
     csv_data = [t_values, s_values_used, function_values, pwl_values, sc_values, gamma_used]
 
@@ -62,7 +65,7 @@ def create_csv_file(file_name: str, column_names: List[str], data: List[list]):
             writer.writerow(new_row)
 
 
-def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, data: List[list],
+def create_plot(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: ServiceCurve, data: List[list],
                 x_axis_range: List[int], y_axis_max: int):
     p = figure(title="Convolution Solution Checker", x_axis_label="x", y_axis_label="y")
 
@@ -101,12 +104,16 @@ if __name__ == '__main__':
     tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
     tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
     tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
-    pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
-    sc = RateLatencyServiceCurve(rate=1.0, latency=3)
+    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
+
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=5)
+    rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
+    rl3 = RateLatencyServiceCurve(rate=2.5, latency=10)
+    pwl_sc = PiecewiseLinearServiceCurve(pieces=[rl1, rl2, rl3])
 
     t_end = 35
     step = 0.01
     print("Starting Solution Check")
     print("...")
-    convolution_solution_check(arrival_curve=pwl, service_curve=sc, t_end=t_end, step=step)
+    convolution_solution_check(arrival_curve=pwl_ac, service_curve=pwl_sc, t_end=t_end, step=step)
     print("Solution Check Completed")
