@@ -1,6 +1,7 @@
 from dnc_service.service_curve import ServiceCurve
 from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
+from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 
 from bokeh.plotting import figure, show, output_file
@@ -35,6 +36,71 @@ def plot_arrival_and_service_curve(arrival_curve: ArrivalCurve,
     p.width = 1000
 
     show(p)
+
+
+def plot_backlog_bound(arrival_curve: ArrivalCurve,
+                       service_curve: ServiceCurve,
+                       backlog_bound_t: float,
+                       x_axis_max: int, y_axis_max: int):
+    x_axis_min = -1
+
+    p = figure(title="Backlog Bound", x_axis_label="x", y_axis_label="y")
+
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.add_backlog_bound(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
+                                  backlog_bound_t=backlog_bound_t)
+
+    # plot settings
+    p.x_range.start = x_axis_min - 1
+    p.x_range.end = x_axis_max + 1
+    # """
+    p.yaxis.fixed_location = 0
+    p.y_range.start = 0
+    p.y_range.end = y_axis_max
+
+    p.height = 600
+    p.width = 1000
+
+    # show the results
+    output_file(filename="output/html_files/backlog_bound.html")
+    show(p)
+
+    # export .svg
+    p.output_backend = "svg"
+    export_svg(p, filename="output/svg_files/backlog_bound.svg")
+
+
+def plot_delay_bound(arrival_curve: ArrivalCurve,
+                     service_curve: ServiceCurve,
+                     ta: float, d: float,
+                     x_axis_max: int, y_axis_max: int):
+    x_axis_min = -1
+
+    p = figure(title="Delay Bound", x_axis_label="x", y_axis_label="y")
+
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.add_delay_bound(p=p, arrival_curve=arrival_curve, service_curve=service_curve, ta=ta, d=d)
+
+    # plot settings
+    p.x_range.start = x_axis_min - 1
+    p.x_range.end = x_axis_max + 1
+    # """
+    p.yaxis.fixed_location = 0
+    p.y_range.start = 0
+    p.y_range.end = y_axis_max
+
+    p.height = 600
+    p.width = 1000
+
+    # show the results
+    output_file(filename="output/html_files/delay_bound.html")
+    show(p)
+
+    # export .svg
+    p.output_backend = "svg"
+    export_svg(p, filename="output/svg_files/delay_bound.svg")
 
 
 def plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,

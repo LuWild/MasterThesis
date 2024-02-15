@@ -2,7 +2,7 @@ from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_service.service_curve import ServiceCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
-from dnc_operations import convolution_calculator, deconvolution_calculator
+from dnc_operations import convolution, deconvolution
 
 from bokeh.plotting import figure
 import numpy as np
@@ -60,8 +60,8 @@ def add_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
     value_data = []
     for t in list(np.arange(x_axis_range[0], x_axis_range[1] + 0.01, 0.01)):
         t_data.append(t)
-        value_data.append(deconvolution_calculator.deconvolution_n2(arrival_curve=arrival_curve,
-                                                                    service_curve=service_curve, t=t))
+        value_data.append(deconvolution.deconvolution_n2(arrival_curve=arrival_curve,
+                                                         service_curve=service_curve, t=t))
 
     p.line(t_data, value_data, color="green", line_width=2)
 
@@ -81,8 +81,8 @@ def add_deconvolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
     value_data = []
     for t in list(np.arange(x_axis_range[0], x_axis_range[1] + 0.01, 0.01)):
         t_data.append(t)
-        value_data.append(deconvolution_calculator.deconvolution(arrival_curve=arrival_curve,
-                                                                 service_curve=service_curve, t=t))
+        value_data.append(deconvolution.deconvolution(arrival_curve=arrival_curve,
+                                                      service_curve=service_curve, t=t))
 
     p.line(t_data, value_data, color="green", line_width=2)
 
@@ -102,7 +102,29 @@ def add_convolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
     value_data = []
     for t in list(np.arange(x_axis_range[0], x_axis_range[1] + 0.01, 0.01)):
         t_data.append(t)
-        value_data.append(convolution_calculator.convolution(arrival_curve=arrival_curve,
-                                                             service_curve=service_curve, t=t))
+        value_data.append(convolution.convolution(arrival_curve=arrival_curve,
+                                                  service_curve=service_curve, t=t))
 
     p.line(t_data, value_data, color="green", line_width=2)
+
+
+def add_backlog_bound(p: figure,
+                      arrival_curve: ArrivalCurve,
+                      service_curve: ServiceCurve,
+                      backlog_bound_t: float):
+    y0 = service_curve.calculate_function_value(backlog_bound_t)
+    y1 = arrival_curve.calculate_function_value(backlog_bound_t)
+    p.segment(x0=backlog_bound_t, y0=y0, x1=backlog_bound_t, y1=y1, line_width=2,
+              line_dash='dotted', line_color='purple')
+
+
+def add_delay_bound(p: figure,
+                    arrival_curve: ArrivalCurve,
+                    service_curve: ServiceCurve,
+                    ta: float, d: float):
+    if ta == 0:
+        y = arrival_curve.get_initial_burst()
+    else:
+        y = arrival_curve.calculate_function_value(ta)
+    p.segment(x0=ta, y0=y, x1=ta+d, y1=y, line_width=2,
+              line_dash='dotted', line_color='purple')
