@@ -1,5 +1,5 @@
-from arrival_curves import *
-from services_curves import *
+from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
+from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 
 
 def convolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):

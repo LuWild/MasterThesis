@@ -1,13 +1,12 @@
-from arrival_curves import *
-from services_curves import *
+from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
+from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
+from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
+from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 import plot_helper
 
 from bokeh.plotting import figure, show, output_file
 from bokeh.io import export_svg
 from typing import List
-
-from selenium import webdriver
-import chromedriver_binary  # Adds chromedriver binary to path
 
 
 def create_plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalCurve,

@@ -1,8 +1,8 @@
-from arrival_curves import *
-from services_curves import *
+from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
+from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
+from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 
 import create_plots
-import solution_checker.deconvolution_solution_checker
 import solution_checker.convolution_solution_checker
 
 if __name__ == '__main__':
