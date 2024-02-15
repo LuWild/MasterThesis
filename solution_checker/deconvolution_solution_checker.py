@@ -8,6 +8,9 @@ import csv
 import numpy as np
 import os
 
+from selenium import webdriver
+import chromedriver_binary  # Adds chromedriver binary to path
+
 
 def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
                                  t_start: float, t_end: float, t_step: float,

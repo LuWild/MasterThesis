@@ -1,16 +1,20 @@
-from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
+from dnc_service.service_curve import ServiceCurve
+from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
-from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
-import plot_helper
 
 from bokeh.plotting import figure, show, output_file
 from bokeh.io import export_svg
 from typing import List
 
+from plotter import plot_helper
 
-def plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalCurve,
-                                   service_curve: PiecewiseLinearServiceCurve,
+from selenium import webdriver
+import chromedriver_binary  # Adds chromedriver binary to path
+
+
+def plot_arrival_and_service_curve(arrival_curve: ArrivalCurve,
+                                   service_curve: ServiceCurve,
                                    x_axis_max: int, y_axis_max: int):
     x_axis_min = -1
 
@@ -58,12 +62,12 @@ def plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
     p.width = 1000
 
     # show the results
-    output_file(filename="../output/html_files/deconvolution_n2.html")
+    output_file(filename="output/html_files/deconvolution_n2.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
-    export_svg(p, filename="../output/svg_files/deconvolution_n2.svg")
+    export_svg(p, filename="output/svg_files/deconvolution_n2.svg")
 
 
 def plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
@@ -91,12 +95,12 @@ def plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
     p.width = 1000
 
     # show the results
-    output_file(filename="../output/html_files/deconvolution.html")
+    output_file(filename="output/html_files/deconvolution.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
-    export_svg(p, filename="../output/svg_files/deconvolution.svg")
+    export_svg(p, filename="output/svg_files/deconvolution.svg")
 
 
 def plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
@@ -124,25 +128,9 @@ def plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
     p.width = 1000
 
     # show the results
-    output_file(filename="../output/html_files/convolution.html")
+    output_file(filename="output/html_files/convolution.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
-    export_svg(p, filename="../output/svg_files/convolution.svg")
-
-
-if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
-    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
-    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
-    rl1 = RateLatencyServiceCurve(rate=1.0, latency=5)
-    rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
-    rl3 = RateLatencyServiceCurve(rate=2.5, latency=10)
-    pwl_sc = PiecewiseLinearServiceCurve(pieces=[rl1, rl2, rl3])
-
-    sc = RateLatencyServiceCurve(rate=1.0, latency=5)
-
-    plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=15, y_axis_max=25)
-    # create_plot_convolution(arrival_curve=pwl_ac, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
+    export_svg(p, filename="output/svg_files/convolution.svg")

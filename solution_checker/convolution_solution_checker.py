@@ -8,10 +8,13 @@ import csv
 import numpy as np
 import os
 
+from selenium import webdriver
+import chromedriver_binary  # Adds chromedriver binary to path
+
 
 def convolution_solution_check(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
                                t_end: float, step: float):
-    t_values = list(np.arange(0, t_end+step, step))
+    t_values = list(np.arange(0, t_end + step, step))
 
     s_values_used = []
     function_values = []
@@ -19,7 +22,7 @@ def convolution_solution_check(arrival_curve: ArrivalCurve, service_curve: Servi
     sc_values = []
     gamma_used = []
     for t in t_values:
-        s_values = list(np.arange(0, t+step, step))
+        s_values = list(np.arange(0, t + step, step))
         current_min = float('inf')
         min_s = float('inf')
         for s in s_values:
@@ -43,7 +46,7 @@ def convolution_solution_check(arrival_curve: ArrivalCurve, service_curve: Servi
         create_csv_file(file_name="../output/csv_files/convolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
     else:
-        create_csv_file(file_name="csv_files/convolution_solution_check.csv",
+        create_csv_file(file_name="output/csv_files/convolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
 
     plot_data = [t_values, function_values]
