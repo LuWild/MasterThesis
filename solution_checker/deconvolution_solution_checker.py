@@ -1,13 +1,12 @@
-from plot_helper import *
+from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
+from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
+from plotter.plot_helper import *
 
 from bokeh.plotting import figure, show, output_file
 from bokeh.io import export_svg
 import csv
 import numpy as np
 import os
-
-from selenium import webdriver
-import chromedriver_binary  # Adds chromedriver binary to path
 
 
 def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
@@ -56,10 +55,10 @@ def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: Ser
 
     column_names = ["t", "s", "alpha(t+s)-beta(s)", "alpha(t+s)", "beta(s)", "gamma_used"]
     if "solution_checker" in os.getcwd():
-        create_csv_file(file_name="../csv_files/deconvolution_solution_check.csv",
+        create_csv_file(file_name="../output/csv_files/deconvolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
     else:
-        create_csv_file(file_name="csv_files/deconvolution_solution_check.csv",
+        create_csv_file(file_name="output/csv_files/deconvolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
 
     plot_data = [t_values, function_values]
@@ -86,8 +85,8 @@ def create_plot(arrival_curve: ArrivalCurve, service_curve: ServiceCurve, data: 
                 x_axis_range: List[int], y_axis_max: int):
     p = figure(title="Deconvolution Solution Checker", x_axis_label="x", y_axis_label="y")
 
-    plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
-    plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
+    add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
+    add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
 
     p.line(data[0], data[1], color="green", line_width=2)
 
@@ -104,17 +103,17 @@ def create_plot(arrival_curve: ArrivalCurve, service_curve: ServiceCurve, data: 
 
     # show the results
     if "solution_checker" in os.getcwd():
-        output_file(filename="../plots/html_files/deconvolution_solution_check.html")
+        output_file(filename="../output/html_files/deconvolution_solution_check.html")
     else:
-        output_file(filename="plots/html_files/deconvolution_solution_check.html")
+        output_file(filename="output/html_files/deconvolution_solution_check.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
     if "solution_checker" in os.getcwd():
-        export_svg(p, filename="../plots/svg_files/deconvolution_solution_check.svg")
+        export_svg(p, filename="../output/svg_files/deconvolution_solution_check.svg")
     else:
-        export_svg(p, filename="plots/svg_files/deconvolution_solution_check.svg")
+        export_svg(p, filename="output/svg_files/deconvolution_solution_check.svg")
 
 
 if __name__ == '__main__':

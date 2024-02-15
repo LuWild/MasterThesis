@@ -1,18 +1,15 @@
 from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_service.service_curve import ServiceCurve
-from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
-from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
-import deconvolution_calculator
-import convolution_calculator
+from dnc_operations import convolution_calculator, deconvolution_calculator
 
 from bokeh.plotting import figure
 import numpy as np
 from typing import List
 
 
-def plot_arrival_curve(p: figure, arrival_curve: ArrivalCurve, x_max: int):
+def add_arrival_curve(p: figure, arrival_curve: ArrivalCurve, x_max: int):
     """
     Adds the line to figure p for the arrival curve.
 
@@ -30,7 +27,7 @@ def plot_arrival_curve(p: figure, arrival_curve: ArrivalCurve, x_max: int):
     p.line(t_data, value_data, color="blue", line_width=2)
 
 
-def plot_service_curve(p: figure, service_curve: ServiceCurve, x_max: int):
+def add_service_curve(p: figure, service_curve: ServiceCurve, x_max: int):
     """
         Adds the line to figure p for the service curve.
 
@@ -48,8 +45,8 @@ def plot_service_curve(p: figure, service_curve: ServiceCurve, x_max: int):
     p.line(t_data, value_data, color="red", line_width=2)
 
 
-def plot_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
-                          service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
+def add_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
+                         service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
     """
     Adds the line to figure p for the deconvolution (n=2).
 
@@ -69,8 +66,8 @@ def plot_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
     p.line(t_data, value_data, color="green", line_width=2)
 
 
-def plot_deconvolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
-                       service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
+def add_deconvolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
+                      service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
     """
     Adds the line to figure p for the deconvolution (n=n).
 
@@ -90,8 +87,8 @@ def plot_deconvolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
     p.line(t_data, value_data, color="green", line_width=2)
 
 
-def plot_convolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
-                     service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
+def add_convolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
+                    service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
     """
     Adds the line to figure p for the deconvolution (n=n).
 

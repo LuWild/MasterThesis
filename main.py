@@ -2,7 +2,7 @@ from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 
-import create_plots
+from plotter import create_plots
 import solution_checker.convolution_solution_checker
 
 if __name__ == '__main__':
@@ -13,8 +13,8 @@ if __name__ == '__main__':
     pwl = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
     sc = RateLatencyServiceCurve(rate=2.5, latency=5)
 
-    create_plots.create_plot_convolution(arrival_curve=pwl, service_curve=sc,
-                                         x_axis_range=[0, 35], y_axis_max=25)
+    create_plots.plot_convolution(arrival_curve=pwl, service_curve=sc,
+                                  x_axis_range=[0, 35], y_axis_max=25)
 
 
     t_end = 35

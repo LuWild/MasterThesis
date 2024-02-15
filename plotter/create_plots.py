@@ -9,15 +9,15 @@ from bokeh.io import export_svg
 from typing import List
 
 
-def create_plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalCurve,
-                                          service_curve: PiecewiseLinearServiceCurve,
-                                          x_axis_max: int, y_axis_max: int):
+def plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalCurve,
+                                   service_curve: PiecewiseLinearServiceCurve,
+                                   x_axis_max: int, y_axis_max: int):
     x_axis_min = -1
 
     p = figure(title="Arrival and Service Curve (PWL)", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
 
     # plot settings
     p.x_range.start = x_axis_min - 1
@@ -33,18 +33,18 @@ def create_plot_arrival_and_service_curve(arrival_curve: PiecewiseLinearArrivalC
     show(p)
 
 
-def create_plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
-                                 service_curve: RateLatencyServiceCurve,
-                                 x_axis_range: List[int], y_axis_max: int):
+def plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
+                          service_curve: RateLatencyServiceCurve,
+                          x_axis_range: List[int], y_axis_max: int):
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
     p = figure(title="Deconvolution (n=2)", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
-    plot_helper.plot_deconvolution_n2(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
-                                      x_axis_range=x_axis_range)
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.add_deconvolution_n2(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
+                                     x_axis_range=x_axis_range)
 
     # plot settings
     p.x_range.start = x_axis_min - 1
@@ -58,26 +58,26 @@ def create_plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
     p.width = 1000
 
     # show the results
-    output_file(filename="plots/html_files/deconvolution_n2.html")
+    output_file(filename="../output/html_files/deconvolution_n2.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
-    export_svg(p, filename="plots/svg_files/deconvolution_n2.svg")
+    export_svg(p, filename="../output/svg_files/deconvolution_n2.svg")
 
 
-def create_plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
-                              service_curve: RateLatencyServiceCurve,
-                              x_axis_range: List[int], y_axis_max: int):
+def plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
+                       service_curve: RateLatencyServiceCurve,
+                       x_axis_range: List[int], y_axis_max: int):
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
     p = figure(title="Deconvolution", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
-    plot_helper.plot_deconvolution(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
-                                   x_axis_range=x_axis_range)
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.add_deconvolution(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
+                                  x_axis_range=x_axis_range)
 
     # plot settings
     p.x_range.start = x_axis_min - 1
@@ -91,26 +91,26 @@ def create_plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
     p.width = 1000
 
     # show the results
-    output_file(filename="plots/html_files/deconvolution.html")
+    output_file(filename="../output/html_files/deconvolution.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
-    export_svg(p, filename="plots/svg_files/deconvolution.svg")
+    export_svg(p, filename="../output/svg_files/deconvolution.svg")
 
 
-def create_plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
-                            service_curve: RateLatencyServiceCurve,
-                            x_axis_range: List[int], y_axis_max: int):
+def plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
+                     service_curve: RateLatencyServiceCurve,
+                     x_axis_range: List[int], y_axis_max: int):
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
     p = figure(title="Convolution", x_axis_label="x", y_axis_label="y")
 
-    plot_helper.plot_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
-    plot_helper.plot_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
-    plot_helper.plot_convolution(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
-                                 x_axis_range=x_axis_range)
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
+    plot_helper.add_convolution(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
+                                x_axis_range=x_axis_range)
 
     # plot settings
     p.x_range.start = x_axis_min - 1
@@ -124,12 +124,12 @@ def create_plot_convolution(arrival_curve: PiecewiseLinearArrivalCurve,
     p.width = 1000
 
     # show the results
-    output_file(filename="plots/html_files/convolution.html")
+    output_file(filename="../output/html_files/convolution.html")
     show(p)
 
     # export .svg
     p.output_backend = "svg"
-    export_svg(p, filename="plots/svg_files/convolution.svg")
+    export_svg(p, filename="../output/svg_files/convolution.svg")
 
 
 if __name__ == '__main__':
@@ -144,5 +144,5 @@ if __name__ == '__main__':
 
     sc = RateLatencyServiceCurve(rate=1.0, latency=5)
 
-    create_plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=15, y_axis_max=25)
+    plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=15, y_axis_max=25)
     # create_plot_convolution(arrival_curve=pwl_ac, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
