@@ -21,10 +21,10 @@ if __name__ == '__main__':
     print("pwl_ac intersections: " + str(pwl_ac.intersections))
     print("pwl_sc intersections: " + str(pwl_sc.intersections))
 
-    #create_plots.plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=25,
-                                                #y_axis_max=25)
+    # create_plots.plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=25, y_axis_max=25)
 
-    q = backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=True, plot_x_axis_max=40, plot_y_axis_max=50)
+    q = backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=True, plot_x_axis_max=40,
+                      plot_y_axis_max=50)
     # d = delay_bound(arrival_curve=pwl_ac, service_curve=sc, create_plot=True, plot_x_axis_max=25, plot_y_axis_max=25)
 
     max_bp = max_length_backlogged_period(arrival_curve=pwl_ac, service_curve=pwl_sc)
