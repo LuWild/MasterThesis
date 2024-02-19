@@ -111,7 +111,7 @@ if __name__ == '__main__':
     rl1 = RateLatencyServiceCurve(rate=1.0, latency=5)
     rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
     rl3 = RateLatencyServiceCurve(rate=2.5, latency=10)
-    pwl_sc = PiecewiseLinearServiceCurve(pieces=[rl1, rl2, rl3])
+    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2, rl3])
 
     t_end = 35
     step = 0.01

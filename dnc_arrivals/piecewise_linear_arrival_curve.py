@@ -45,7 +45,7 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
         """
         number_of_intersections = len(self.intersections)
         for i in range(0, number_of_intersections):
-            if t <= self.intersections[i]:
+            if t < self.intersections[i]:
                 return self.gammas[i]
         return self.gammas[number_of_intersections]
 
