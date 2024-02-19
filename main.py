@@ -4,6 +4,7 @@ from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCu
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 from dnc_operations.backlog_bound import backlog_bound
 from dnc_operations.delay_bound import delay_bound
+from dnc_operations.max_length_backlogged_period import max_length_backlogged_period
 
 from plotter import create_plots
 
@@ -25,6 +26,9 @@ if __name__ == '__main__':
 
     q = backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=True, plot_x_axis_max=40, plot_y_axis_max=50)
     # d = delay_bound(arrival_curve=pwl_ac, service_curve=sc, create_plot=True, plot_x_axis_max=25, plot_y_axis_max=25)
+
+    max_bp = max_length_backlogged_period(arrival_curve=pwl_ac, service_curve=pwl_sc)
+    print(max_bp)
 
     # create_plots.plot_convolution(arrival_curve=pwl, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
 
