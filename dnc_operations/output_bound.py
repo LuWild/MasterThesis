@@ -11,3 +11,7 @@ def output_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Rate
         return deconvolution(arrival_curve=arrival_curve, service_curve=service_curve, t=t)
     else:
         return 0
+
+
+def output_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):
+    pass

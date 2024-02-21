@@ -1,4 +1,5 @@
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
+from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 
 
@@ -53,3 +54,14 @@ def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Rat
         return R * (t + T - ta) + ba + ra * ta
     else:
         return arrival_curve.calculate_function_value(t=t + T)
+
+
+def deconvolution_test(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
+                       t: float):
+    gammas = arrival_curve.gammas
+    rhos = service_curve.rhos
+
+    ac_intersections = arrival_curve.intersections
+    sc_intersections = service_curve.intersections
+
+

@@ -57,12 +57,14 @@ def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: Ser
     csv_data = [t_values, s_values_used, function_values, pwl_values, sc_values, gamma_used]
 
     column_names = ["t", "s", "alpha(t+s)-beta(s)", "alpha(t+s)", "beta(s)", "gamma_used"]
+    """
     if "solution_checker" in os.getcwd():
         create_csv_file(file_name="../output/csv_files/deconvolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
     else:
         create_csv_file(file_name="output/csv_files/deconvolution_solution_check.csv",
                         column_names=column_names, data=csv_data)
+    """
 
     plot_data = [t_values, function_values]
     create_plot(arrival_curve=arrival_curve, service_curve=service_curve,
@@ -120,18 +122,19 @@ def create_plot(arrival_curve: ArrivalCurve, service_curve: ServiceCurve, data: 
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=1.5, burst=5)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=8)
-    tb3 = TokenBucketArrivalCurve(rate=0.25, burst=13)
+    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=9)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=14)
     pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
 
-    rl1 = RateLatencyServiceCurve(rate=1.0, latency=5)
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
     rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
-    rl3 = RateLatencyServiceCurve(rate=2.5, latency=10)
-    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2, rl3])
+    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
 
-    t = [-15, 20, 0.01]
-    s = [0, 100, 0.01]
+    print("pwl_ac intersections: " + str(pwl_ac.intersections))
+    print("pwl_sc intersections: " + str(pwl_sc.intersections))
+
+    t = [-15, 25, 0.1]
+    s = [0, 100, 0.1]
     print("Starting Solution Check")
     print("...")
     deconvolution_solution_check(arrival_curve=pwl_ac, service_curve=pwl_sc,
