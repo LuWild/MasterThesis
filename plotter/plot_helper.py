@@ -121,10 +121,16 @@ def add_backlog_bound(p: figure,
 def add_delay_bound(p: figure,
                     arrival_curve: ArrivalCurve,
                     service_curve: ServiceCurve,
-                    ta: float, d: float):
-    if ta == 0:
-        y = arrival_curve.get_initial_burst()
+                    ta: float, d: float,
+                    case=1):
+    if case == 1:
+        if ta == 0:
+            y = arrival_curve.get_initial_burst()
+        else:
+            y = arrival_curve.calculate_function_value(ta)
+        p.segment(x0=ta, y0=y, x1=ta + d, y1=y, line_width=2,
+                  line_dash='dotted', line_color='purple')
     else:
-        y = arrival_curve.calculate_function_value(ta)
-    p.segment(x0=ta, y0=y, x1=ta+d, y1=y, line_width=2,
-              line_dash='dotted', line_color='purple')
+        y = service_curve.calculate_function_value(ta)
+        p.segment(x0=ta - d, y0=y, x1=ta, y1=y, line_width=2,
+                  line_dash='dotted', line_color='purple')

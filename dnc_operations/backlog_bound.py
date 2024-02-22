@@ -47,6 +47,8 @@ def backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Pie
             a = i
             break
 
+    print("Backlog Bound: " + str(q))
+
     if create_plot:
         plot_backlog_bound(arrival_curve=arrival_curve, service_curve=service_curve, backlog_bound_t=a,
                            x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max)

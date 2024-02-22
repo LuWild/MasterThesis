@@ -30,20 +30,28 @@ def delay_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
 
 def delay_bound_brute_force(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
                             create_plot=False, plot_x_axis_max=-1, plot_y_axis_max=-1):
-    # 0.01
-
     d_max = -1
     d_max_intersection = -1
+    case = -1
     for intersection in arrival_curve.intersections:
         ac_value = arrival_curve.calculate_function_value(t=intersection)
-        print("intersection: " + str(intersection) + " ; ac_value: " + str(ac_value))
         for x in list(np.arange(intersection, plot_x_axis_max + 0.01, 0.01)):
-            sc_value = service_curve.calculate_function_value(x)
-            print("sc_value: " + str(sc_value))
+            sc_value = service_curve.calculate_function_value(t=x)
             if sc_value - ac_value < 0.03:
                 if (x - intersection) > d_max:
                     d_max = x - intersection
                     d_max_intersection = intersection
+                    case = 1
+
+    for intersection in service_curve.intersections:
+        sc_value = service_curve.calculate_function_value(t=intersection)
+        for x in list(np.arange(0, intersection+0.01, 0.01)):
+            ac_value = arrival_curve.calculate_function_value(t=x)
+            if sc_value - ac_value < 0.03:
+                if (intersection-x) > d_max:
+                    d_max = intersection - x
+                    d_max_intersection = intersection
+                    case = 2
 
     ta = d_max_intersection
     d = d_max
@@ -52,6 +60,6 @@ def delay_bound_brute_force(arrival_curve: PiecewiseLinearArrivalCurve, service_
 
     if create_plot:
         plot_delay_bound(arrival_curve=arrival_curve, service_curve=service_curve, ta=ta, d=d,
-                         x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max)
+                         x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max, case=case)
     else:
         return d

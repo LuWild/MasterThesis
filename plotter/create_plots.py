@@ -74,14 +74,15 @@ def plot_backlog_bound(arrival_curve: ArrivalCurve,
 def plot_delay_bound(arrival_curve: ArrivalCurve,
                      service_curve: ServiceCurve,
                      ta: float, d: float,
-                     x_axis_max: int, y_axis_max: int):
+                     x_axis_max: int, y_axis_max: int,
+                     case=1):
     x_axis_min = -1
 
     p = figure(title="Delay Bound", x_axis_label="x", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
-    plot_helper.add_delay_bound(p=p, arrival_curve=arrival_curve, service_curve=service_curve, ta=ta, d=d)
+    plot_helper.add_delay_bound(p=p, arrival_curve=arrival_curve, service_curve=service_curve, ta=ta, d=d, case=case)
 
     # plot settings
     p.x_range.start = x_axis_min - 1

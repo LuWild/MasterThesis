@@ -122,12 +122,12 @@ def create_plot(arrival_curve: ArrivalCurve, service_curve: ServiceCurve, data: 
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=9)
-    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=14)
+    tb1 = TokenBucketArrivalCurve(rate=1.5, burst=4)
+    tb2 = TokenBucketArrivalCurve(rate=0.5, burst=7)
     pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
 
     rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
-    rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
+    rl2 = RateLatencyServiceCurve(rate=2.5, latency=7)
     pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
 
     print("pwl_ac intersections: " + str(pwl_ac.intersections))

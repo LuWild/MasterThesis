@@ -58,10 +58,4 @@ def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Rat
 
 def deconvolution_test(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
                        t: float):
-    gammas = arrival_curve.gammas
-    rhos = service_curve.rhos
-
-    ac_intersections = arrival_curve.intersections
-    sc_intersections = service_curve.intersections
-
-
+    pass
