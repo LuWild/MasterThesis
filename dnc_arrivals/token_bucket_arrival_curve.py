@@ -20,3 +20,6 @@ class TokenBucketArrivalCurve(ArrivalCurve):
 
     def get_initial_burst(self) -> float:
         return self.burst
+
+    def get_used_gamma(self, t: float):
+        return self

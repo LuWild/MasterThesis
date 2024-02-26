@@ -13,3 +13,7 @@ class ArrivalCurve(ABC):
     @abstractmethod
     def get_initial_burst(self) -> float:
         pass
+
+    @abstractmethod
+    def get_used_gamma(self, t: float):
+        pass
