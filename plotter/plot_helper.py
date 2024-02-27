@@ -86,8 +86,8 @@ def add_deconvolution(p: figure, arrival_curve: ArrivalCurve, service_curve: Ser
     p.line(t_data, value_data, color="green", line_width=2)
 
 
-def add_convolution(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,
-                    service_curve: RateLatencyServiceCurve, x_axis_range: List[int]):
+def add_convolution(p: figure, arrival_curve: ArrivalCurve,
+                    service_curve: ServiceCurve, x_axis_range: List[int]):
     """
     Adds the line to figure p for the deconvolution (n=n).
 
