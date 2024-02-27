@@ -12,7 +12,7 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
         :param gammas: list of TokenBucketArrivalCurves (in normal form)
         """
         self.gammas = gammas
-        self.intersections = self.__get_list_of_all_intersections()
+        self.intersections = self.calculate_list_of_all_intersections()
 
     def calculate_function_value(self, t: float):
         """
@@ -81,7 +81,14 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
             else:
                 return [0, tb1]
 
-    def __get_list_of_all_intersections(self):
+    def print_all_information(self):
+        print("PiecewiseLinearArrivalCurve Information (" + str(self) + "):")
+        for i in range(len(self.gammas)):
+            gamma = self.gammas[i]
+            print("gamma " + str(i+1) + ": rate = " + str(gamma.rate) + " ; burst = " + str(gamma.burst))
+        print("intersections: " + str(self.intersections))
+
+    def calculate_list_of_all_intersections(self):
         intersections = []
         for x in range(0, len(self.gammas) - 1):
             tb1 = self.gammas[x]

@@ -33,6 +33,9 @@ class PiecewiseLinearServiceCurve(ServiceCurve):
                     f_t_max = f_t
             return f_t_max
 
+    def get_initial_latency(self) -> float:
+        return self.rhos[0].latency
+
     def get_used_rho(self, t: float):
         """
         Returns the RateLatencyServiceCurve that is used to calculate f(t) in the segment for a given t

@@ -37,17 +37,20 @@ def backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Pie
     intersections.append(service_curve.rhos[0].latency)
     intersections.sort()
 
+    T = service_curve.get_initial_latency()
+
     q = float('-inf')
     a = float('-inf')
     for i in intersections:
         gamma = arrival_curve.get_used_gamma(i)
         rho = service_curve.get_used_rho(i)
         if gamma.rate <= rho.rate:
-            q = gamma.calculate_function_value(i) - rho.calculate_function_value(i)
-            a = i
+            if i > T:
+                a = i
+            else:
+                a = T
+            q = gamma.calculate_function_value(a) - rho.calculate_function_value(a)
             break
-
-    print("Backlog Bound: " + str(q))
 
     if create_plot:
         plot_backlog_bound(arrival_curve=arrival_curve, service_curve=service_curve, backlog_bound_t=a,
