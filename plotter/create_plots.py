@@ -137,8 +137,7 @@ def plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
     export_svg(p, filename="output/svg_files/deconvolution_n2.svg")
 
 
-def plot_deconvolution(arrival_curve: PiecewiseLinearArrivalCurve,
-                       service_curve: RateLatencyServiceCurve,
+def plot_deconvolution(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
                        x_axis_range: List[int], y_axis_max: int):
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]

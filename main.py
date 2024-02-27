@@ -7,7 +7,6 @@ from dnc_operations.delay_bound import delay_bound
 from dnc_operations.delay_bound import delay_bound_brute_force
 from dnc_operations.max_length_backlogged_period import max_length_backlogged_period
 from solution_checker.deconvolution_solution_checker import deconvolution_solution_check
-from dnc_operations.deconvolution import create_plot_deconvolution_test
 from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 
 from plotter import create_plots
@@ -42,7 +41,6 @@ if __name__ == '__main__':
 
     # create_plots.plot_convolution(arrival_curve=pwl, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
 
-
     t = [-15, 25, 0.1]
     s = [0, 100, 0.1]
     print("Starting Solution Check")
@@ -52,6 +50,4 @@ if __name__ == '__main__':
                                  s_start=s[0], s_end=s[1], s_step=s[2])
     print("Solution Check Completed")
 
-    create_plot_deconvolution_test(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_range=[-15, 25], y_axis_max=25)
-
-
+    create_plots.plot_deconvolution(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_range=[-15, 25], y_axis_max=25)
