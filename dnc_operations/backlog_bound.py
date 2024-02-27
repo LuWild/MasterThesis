@@ -31,7 +31,7 @@ def backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Rat
 
 
 def backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
-                  create_plot=False, plot_x_axis_max=-1, plot_y_axis_max=-1):
+                  create_plot=False, plot_x_axis_max=-1, plot_y_axis_max=-1, deconvolution_case=False):
     intersections = copy.deepcopy(arrival_curve.intersections)
     intersections.extend(service_curve.intersections)
     intersections.append(service_curve.rhos[0].latency)
@@ -52,9 +52,12 @@ def backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Pie
             q = gamma.calculate_function_value(a) - rho.calculate_function_value(a)
             break
 
-    if create_plot:
-        plot_backlog_bound(arrival_curve=arrival_curve, service_curve=service_curve, backlog_bound_t=a,
-                           x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max)
-        return q
+    if deconvolution_case:
+        return [q, a]
     else:
-        return q
+        if create_plot:
+            plot_backlog_bound(arrival_curve=arrival_curve, service_curve=service_curve, backlog_bound_t=a,
+                               x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max)
+            return q
+        else:
+            return q

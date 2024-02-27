@@ -7,6 +7,9 @@ from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCu
 from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 from dnc_operations import backlog_bound
 
+import csv
+import os.path
+
 
 def deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):
     """
@@ -67,5 +70,23 @@ def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Rat
 
 def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve, t: float):
     shifted_arrival_curve = piecewise_linear_arrival_curve_shift(arrival_curve=arrival_curve, t_shift=t)
-    return backlog_bound.backlog_bound(arrival_curve=shifted_arrival_curve, service_curve=service_curve)
+    q_and_a = backlog_bound.backlog_bound(arrival_curve=shifted_arrival_curve, service_curve=service_curve,
+                                          deconvolution_case=True)
+    a = q_and_a[1]
+
+    row_data = [str(t), str(a)]
+
+    file_name = "output/csv_files/a_of_t_deconvolution.csv"
+    if os.path.isfile(file_name):
+        with open(file_name, 'a', newline='') as file:
+            csv.writer(file).writerow(row_data)
+    else:
+        with open(file_name, 'w', newline='') as file:
+            writer = csv.writer(file)
+
+            column_names = ["t", "a"]
+            writer.writerow(column_names)
+            writer.writerow(row_data)
+
+    return q_and_a[0]
 

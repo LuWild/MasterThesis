@@ -10,13 +10,17 @@ from solution_checker.deconvolution_solution_checker import deconvolution_soluti
 from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 
 from plotter import create_plots
+from plotter import custum_plots
+
+import os
+import time
 
 if __name__ == '__main__':
     # """
     tb1 = TokenBucketArrivalCurve(rate=2.0, burst=2)
     tb2 = TokenBucketArrivalCurve(rate=1.0, burst=6)
     tb3 = TokenBucketArrivalCurve(rate=0.5, burst=10)
-    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
+    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
 
     rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
     rl2 = RateLatencyServiceCurve(rate=2.5, latency=7)
@@ -26,7 +30,7 @@ if __name__ == '__main__':
 
     # create_plots.plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=25, y_axis_max=25)
 
-    create_plots.plot_arrival_and_service_curve(arrival_curve=piecewise_linear_arrival_curve_shift(pwl_ac, 5),
+    create_plots.plot_arrival_and_service_curve(arrival_curve=piecewise_linear_arrival_curve_shift(pwl_ac, -7.3),
                                                 service_curve=pwl_sc,
                                                 x_axis_max=25, y_axis_max=25)
 
@@ -50,4 +54,8 @@ if __name__ == '__main__':
                                  s_start=s[0], s_end=s[1], s_step=s[2])
     print("Solution Check Completed")
 
+    file_name = "output/csv_files/a_of_t_deconvolution.csv"
+    os.remove(file_name)
+    time.sleep(2)
     create_plots.plot_deconvolution(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_range=[-15, 25], y_axis_max=25)
+    custum_plots.custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25)
