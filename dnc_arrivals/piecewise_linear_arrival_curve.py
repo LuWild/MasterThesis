@@ -82,7 +82,7 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
                 return [0, tb1]
 
     def print_all_information(self):
-        print("PiecewiseLinearArrivalCurve Information (" + str(self) + "):")
+        print("PiecewiseLinearArrivalCurve Information (Object ID: " + str(id(self)) + "):")
         for i in range(len(self.gammas)):
             gamma = self.gammas[i]
             print("gamma " + str(i+1) + ": rate = " + str(gamma.rate) + " ; burst = " + str(gamma.burst))

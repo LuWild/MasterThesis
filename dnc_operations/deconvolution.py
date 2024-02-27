@@ -9,6 +9,7 @@ from dnc_operations import backlog_bound
 
 import csv
 import os.path
+import time
 
 
 def deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):
@@ -87,6 +88,7 @@ def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Pie
             column_names = ["t", "a"]
             writer.writerow(column_names)
             writer.writerow(row_data)
+        time.sleep(4)
 
     return q_and_a[0]
 

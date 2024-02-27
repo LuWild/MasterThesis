@@ -50,7 +50,7 @@ class PiecewiseLinearServiceCurve(ServiceCurve):
         return self.rhos[number_of_intersections]
 
     def print_all_information(self):
-        print("PiecewiseLinearServiceCurve Information (" + str(self) + "):")
+        print("PiecewiseLinearServiceCurve Information (Object ID: " + str(id(self)) + "):")
         for i in range(len(self.rhos)):
             rho = self.rhos[i]
             print("rho " + str(i + 1) + ": rate = " + str(rho.rate) + " ; latency = " + str(rho.latency))

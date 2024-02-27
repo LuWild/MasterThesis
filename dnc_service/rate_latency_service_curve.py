@@ -21,6 +21,6 @@ class RateLatencyServiceCurve(ServiceCurve):
             return R * (t - T)
 
     def print_all_information(self):
-        print("RateLatencyServiceCurve Information (" + str(self) + "):")
+        print("RateLatencyServiceCurve Information (Object ID: " + str(id(self)) + "):")
         print("rate = " + str(self.rate) + " ; latency = " + str(self.latency))
 
