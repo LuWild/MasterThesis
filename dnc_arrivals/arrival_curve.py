@@ -17,3 +17,7 @@ class ArrivalCurve(ABC):
     @abstractmethod
     def get_used_gamma(self, t: float):
         pass
+
+    @abstractmethod
+    def print_all_information(self):
+        pass

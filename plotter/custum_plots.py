@@ -18,7 +18,7 @@ def custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25):
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
-    p = figure(title="Custom Plot", x_axis_label="x", y_axis_label="y")
+    p = figure(title="a(t)", x_axis_label="x", y_axis_label="y")
 
     t = []
     a = []

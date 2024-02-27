@@ -23,3 +23,8 @@ class TokenBucketArrivalCurve(ArrivalCurve):
 
     def get_used_gamma(self, t: float):
         return self
+
+    def print_all_information(self):
+        print("TokenBucketArrivalCurve Information (" + str(self) + "):")
+        print("rate = " + str(self.rate) + " ; burst = " + str(self.burst))
+

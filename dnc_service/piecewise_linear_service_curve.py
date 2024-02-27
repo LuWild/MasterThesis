@@ -49,6 +49,13 @@ class PiecewiseLinearServiceCurve(ServiceCurve):
                 return self.rhos[i]
         return self.rhos[number_of_intersections]
 
+    def print_all_information(self):
+        print("PiecewiseLinearServiceCurve Information (" + str(self) + "):")
+        for i in range(len(self.rhos)):
+            rho = self.rhos[i]
+            print("rho " + str(i + 1) + ": rate = " + str(rho.rate) + " ; latency = " + str(rho.latency))
+        print("intersections: " + str(self.intersections))
+
     def __get_list_of_all_intersections(self):
         intersections = []
         for x in range(0, len(self.rhos) - 1):

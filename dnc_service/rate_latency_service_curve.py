@@ -19,3 +19,8 @@ class RateLatencyServiceCurve(ServiceCurve):
             return 0
         else:
             return R * (t - T)
+
+    def print_all_information(self):
+        print("RateLatencyServiceCurve Information (" + str(self) + "):")
+        print("rate = " + str(self.rate) + " ; latency = " + str(self.latency))
+

@@ -15,36 +15,33 @@ from plotter import custum_plots
 import os
 import time
 
-if __name__ == '__main__':
-    # """
-    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=2)
-    tb2 = TokenBucketArrivalCurve(rate=1.0, burst=6)
-    tb3 = TokenBucketArrivalCurve(rate=0.5, burst=10)
-    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
 
-    rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
-    rl2 = RateLatencyServiceCurve(rate=2.5, latency=7)
-    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
-    print("pwl_ac intersections: " + str(pwl_ac.intersections))
-    print("pwl_sc intersections: " + str(pwl_sc.intersections))
-
-    # create_plots.plot_arrival_and_service_curve(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_max=25, y_axis_max=25)
-
+def show_arrival_and_service_curve():
     create_plots.plot_arrival_and_service_curve(arrival_curve=piecewise_linear_arrival_curve_shift(pwl_ac, -7.3),
                                                 service_curve=pwl_sc,
                                                 x_axis_max=25, y_axis_max=25)
 
+
+def show_backlog_bound():
     q = backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=False, plot_x_axis_max=40,
                       plot_y_axis_max=50)
+
+
+def show_delay_bound():
     d = delay_bound_brute_force(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=False, plot_x_axis_max=40,
                                 plot_y_axis_max=50)
-    # d = delay_bound(arrival_curve=pwl_ac, service_curve=sc, create_plot=True, plot_x_axis_max=25, plot_y_axis_max=25)
 
+
+def show_max_bp():
     max_bp = max_length_backlogged_period(arrival_curve=pwl_ac, service_curve=pwl_sc)
     print("Maximum length of a backlogged period: " + str(max_bp))
 
-    # create_plots.plot_convolution(arrival_curve=pwl, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
 
+def show_convolution():
+    create_plots.plot_convolution(arrival_curve=pwl, service_curve=sc, x_axis_range=[0, 35], y_axis_max=25)
+
+
+def show_deconvolution():
     t = [-15, 25, 0.1]
     s = [0, 100, 0.1]
     print("Starting Solution Check")
@@ -59,3 +56,21 @@ if __name__ == '__main__':
     time.sleep(2)
     create_plots.plot_deconvolution(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_range=[-15, 25], y_axis_max=25)
     custum_plots.custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25)
+
+
+if __name__ == '__main__':
+    # """
+    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=2)
+    tb2 = TokenBucketArrivalCurve(rate=1.0, burst=6)
+    tb3 = TokenBucketArrivalCurve(rate=0.5, burst=10)
+    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
+    pwl_ac.print_all_information()
+
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
+    rl2 = RateLatencyServiceCurve(rate=2.5, latency=7)
+    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
+    pwl_sc.print_all_information()
+
+    show_arrival_and_service_curve()
+
+    show_deconvolution()
