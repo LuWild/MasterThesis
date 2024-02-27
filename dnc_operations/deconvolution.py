@@ -1,6 +1,11 @@
+import copy
+from typing import List
+
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
+
+from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 
 
 def deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateLatencyServiceCurve, t: float):
@@ -58,4 +63,40 @@ def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Rat
 
 def deconvolution_test(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
                        t: float):
-    pass
+    from dnc_operations.backlog_bound import backlog_bound
+    shifted_arrival_curve = piecewise_linear_arrival_curve_shift(arrival_curve=arrival_curve, t_shift=t)
+    return backlog_bound(arrival_curve=shifted_arrival_curve,service_curve=service_curve)
+
+
+def create_plot_deconvolution_test(arrival_curve: PiecewiseLinearArrivalCurve,
+                                   service_curve: PiecewiseLinearServiceCurve,
+                                   x_axis_range: List[int], y_axis_max: int):
+    from bokeh.plotting import figure, show
+    import numpy as np
+    from plotter.plot_helper import add_service_curve, add_arrival_curve
+
+    p = figure(title="Deconvolution NEW test", x_axis_label="x", y_axis_label="y")
+
+    add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
+    add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
+
+    t_data = []
+    value_data = []
+    for t in list(np.arange(x_axis_range[0], x_axis_range[1] + 0.01, 0.01)):
+        t_data.append(t)
+        value_data.append(deconvolution_test(arrival_curve=arrival_curve, service_curve=service_curve, t=t))
+
+    p.line(t_data, value_data, color="green", line_width=2)
+
+    # plot settings
+    p.x_range.start = x_axis_range[0]
+    p.x_range.end = x_axis_range[1]
+    # """
+    p.yaxis.fixed_location = 0
+    p.y_range.start = 0
+    p.y_range.end = y_axis_max
+
+    p.height = 600
+    p.width = 1000
+
+    show(p)
