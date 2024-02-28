@@ -12,6 +12,7 @@ from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_sh
 
 from plotter import create_plots
 from plotter import custum_plots
+from plotter import interactive_plots
 
 import os
 import time
@@ -50,7 +51,7 @@ def show_convolution():
 
 
 def show_deconvolution():
-    t = [-15, 25, 0.1]
+    t = [-25, 25, 0.1]
     s = [0, 100, 0.1]
     print("Starting Solution Check")
     print("...")
@@ -61,8 +62,13 @@ def show_deconvolution():
 
     file_name = "output/csv_files/a_of_t_deconvolution.csv"
     os.remove(file_name)
-    create_plots.plot_deconvolution(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_range=[-15, 25], y_axis_max=25)
-    custum_plots.custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25)
+    create_plots.plot_deconvolution(arrival_curve=pwl_ac, service_curve=pwl_sc, x_axis_range=[-25, 25], y_axis_max=25)
+    custum_plots.custom_plot_a_of_t(x_axis_range=[-25, 25], y_axis_max=25)
+
+
+def show_interactive_plots():
+    interactive_plots.plot_interactive_backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc,
+                                                     x_axis_max=25, y_axis_max=25)
 
 
 if __name__ == '__main__':
@@ -73,12 +79,15 @@ if __name__ == '__main__':
     pwl_ac.print_all_information()
 
     rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
-    rl2 = RateLatencyServiceCurve(rate=2.5, latency=7)
-    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
+    rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
+    rl3 = RateLatencyServiceCurve(rate=2.5, latency=12)
+    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2, rl3])
     pwl_sc.print_all_information()
 
     # show_arrival_and_service_curve()
 
-    show_convolution()
+    # show_convolution()
 
-    # show_deconvolution()
+    show_deconvolution()
+
+    show_interactive_plots()

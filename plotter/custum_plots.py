@@ -18,7 +18,7 @@ def custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25):
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
-    p = figure(title="a(t)", x_axis_label="x", y_axis_label="y")
+    p = figure(title="a(t)", x_axis_label="t", y_axis_label="y")
 
     t = []
     a = []
@@ -57,11 +57,39 @@ def custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25):
 
 
 def custom_plot():
+    from bokeh.layouts import column, row
+    from bokeh.models import ColumnDataSource, CustomJS, Slider, SetValue
+
     p = figure(title="Custom Plot", x_axis_label="x", y_axis_label="y")
+
+    t = [1, 2, 3, 4, 5]
+    a1 = [1, 2, 3, 4, 5]
+    a2 = [2, 4, 6, 8, 14]
+    a_list = [a1, a2]
+
+    x = [x * 0.005 for x in range(0, 200)]
+    y = x
+
+    source = ColumnDataSource(data=dict(x=t, y=a1))
+
+    p.line('x', 'y', source=source, line_width=3, line_alpha=0.6)
+
+    js_code = """
+        const f = cb_obj.value
+        const a_list = %s
+        const x = source.data.x
+        const y = a_list[f]
+        source.data = { x, y }
+    """ % a_list
+
+    callback = CustomJS(args=dict(source=source), code=js_code)
+
+    slider = Slider(start=0, end=1, value=0, step=1, title="power")
+    slider.js_on_change('value', callback)
 
     # show the results
     output_file(filename="../output/html_files/custom_plot.html")
-    show(p)
+    show(column(p, slider))
 
     # export .svg
     p.output_backend = "svg"
@@ -69,4 +97,4 @@ def custom_plot():
 
 
 if __name__ == '__main__':
-    custom_plot_a_of_t()
+    custom_plot()
