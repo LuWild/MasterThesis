@@ -85,7 +85,7 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
         print("PiecewiseLinearArrivalCurve Information (Object ID: " + str(id(self)) + "):")
         for i in range(len(self.gammas)):
             gamma = self.gammas[i]
-            print("gamma " + str(i+1) + ": rate = " + str(gamma.rate) + " ; burst = " + str(gamma.burst))
+            print("gamma " + str(i + 1) + ": rate = " + str(gamma.rate) + " ; burst = " + str(gamma.burst))
         print("intersections: " + str(self.intersections))
 
     def calculate_list_of_all_intersections(self):

@@ -9,6 +9,7 @@ from dnc_operations.max_length_backlogged_period import max_length_backlogged_pe
 from solution_checker.deconvolution_solution_checker import deconvolution_solution_check
 from solution_checker.convolution_solution_checker import convolution_solution_check
 from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
+import dnc_operations.function_invert
 
 from plotter import create_plots
 from plotter import custum_plots
@@ -19,19 +20,21 @@ import time
 
 
 def show_arrival_and_service_curve():
-    create_plots.plot_arrival_and_service_curve(arrival_curve=piecewise_linear_arrival_curve_shift(pwl_ac, -7.3),
+    create_plots.plot_arrival_and_service_curve(arrival_curve=pwl_ac,
                                                 service_curve=pwl_sc,
                                                 x_axis_max=25, y_axis_max=25)
 
 
 def show_backlog_bound():
-    q = backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=False, plot_x_axis_max=40,
-                      plot_y_axis_max=50)
+    q = backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=True, plot_x_axis_max=25,
+                      plot_y_axis_max=25)
 
 
 def show_delay_bound():
-    d = delay_bound_brute_force(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=False, plot_x_axis_max=40,
-                                plot_y_axis_max=50)
+    d = delay_bound(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=True, plot_x_axis_max=25,
+                    plot_y_axis_max=25)
+    d = delay_bound_brute_force(arrival_curve=pwl_ac, service_curve=pwl_sc, create_plot=True, plot_x_axis_max=25,
+                                plot_y_axis_max=25)
 
 
 def show_max_bp():
@@ -53,12 +56,9 @@ def show_convolution():
 def show_deconvolution():
     t = [-25, 25, 0.1]
     s = [0, 100, 0.1]
-    print("Starting Solution Check")
-    print("...")
     deconvolution_solution_check(arrival_curve=pwl_ac, service_curve=pwl_sc,
                                  t_start=t[0], t_end=t[1], t_step=t[2],
                                  s_start=s[0], s_end=s[1], s_step=s[2])
-    print("Solution Check Completed")
 
     file_name = "output/csv_files/a_of_t_deconvolution.csv"
     os.remove(file_name)
@@ -66,14 +66,14 @@ def show_deconvolution():
     custum_plots.custom_plot_a_of_t(x_axis_range=[-25, 25], y_axis_max=25)
 
 
-def show_interactive_plots():
+def show_interactive_plot():
     interactive_plots.plot_interactive_backlog_bound(arrival_curve=pwl_ac, service_curve=pwl_sc,
                                                      x_axis_max=25, y_axis_max=25)
 
 
 if __name__ == '__main__':
-    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=2)
-    tb2 = TokenBucketArrivalCurve(rate=1.0, burst=6)
+    tb1 = TokenBucketArrivalCurve(rate=2.5, burst=2)
+    tb2 = TokenBucketArrivalCurve(rate=1.1, burst=6)
     tb3 = TokenBucketArrivalCurve(rate=0.5, burst=10)
     pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2, tb3])
     pwl_ac.print_all_information()
@@ -86,8 +86,14 @@ if __name__ == '__main__':
 
     # show_arrival_and_service_curve()
 
+    # show_backlog_bound()
+
+    show_delay_bound()
+
+    # show_arrival_and_service_curve()
+
     # show_convolution()
 
-    show_deconvolution()
+    # show_deconvolution()
 
-    show_interactive_plots()
+    # show_interactive_plot()

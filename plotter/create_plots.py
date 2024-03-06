@@ -19,7 +19,7 @@ def plot_arrival_and_service_curve(arrival_curve: ArrivalCurve,
                                    x_axis_max: int, y_axis_max: int):
     x_axis_min = -1
 
-    p = figure(title="Arrival and Service Curve (PWL)", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Arrival and Service Curve (PWL)", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
@@ -44,7 +44,7 @@ def plot_backlog_bound(arrival_curve: ArrivalCurve,
                        x_axis_max: int, y_axis_max: int):
     x_axis_min = -1
 
-    p = figure(title="Backlog Bound", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Backlog Bound", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
@@ -78,7 +78,7 @@ def plot_delay_bound(arrival_curve: ArrivalCurve,
                      case=1):
     x_axis_min = -1
 
-    p = figure(title="Delay Bound", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Delay Bound", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
@@ -110,7 +110,7 @@ def plot_deconvolution_n2(arrival_curve: PiecewiseLinearArrivalCurve,
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
-    p = figure(title="Deconvolution (n=2)", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Deconvolution (n=2)", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
@@ -142,7 +142,7 @@ def plot_deconvolution(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
-    p = figure(title="Deconvolution", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Deconvolution", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)
@@ -175,7 +175,7 @@ def plot_convolution(arrival_curve: ArrivalCurve,
     x_axis_min = x_axis_range[0]
     x_axis_max = x_axis_range[1]
 
-    p = figure(title="Convolution", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Convolution", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
     plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_max)

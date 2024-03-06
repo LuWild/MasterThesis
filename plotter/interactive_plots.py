@@ -18,7 +18,7 @@ from selenium import webdriver
 import chromedriver_binary  # Adds chromedriver binary to path
 
 from bokeh.layouts import column, row
-from bokeh.models import ColumnDataSource, CustomJS, Slider, SetValue
+from bokeh.models import ColumnDataSource, CustomJS, Slider, SetValue, Label
 
 import numpy as np
 
@@ -106,8 +106,8 @@ def plot_interactive_backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve,
     show(column(p, slider))
 
 
-def create_ac_and_bb_data(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve, x_axis_max: int,
-                          ac_data_start: float, ac_data_end: float, ac_data_step: float):
+def create_ac_and_bb_data(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
+                          x_axis_max: int, ac_data_start: float, ac_data_end: float, ac_data_step: float):
     time = list(np.arange(0.01, x_axis_max + 0.01, 0.01))
 
     arrival_curves = []
