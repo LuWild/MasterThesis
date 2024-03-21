@@ -9,6 +9,9 @@ from dnc_operations.max_length_backlogged_period import max_length_backlogged_pe
 from solution_checker.deconvolution_solution_checker import deconvolution_solution_check
 from solution_checker.convolution_solution_checker import convolution_solution_check
 from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
+from dnc_leftover_service.letfover_service import FIFO_leftover_service_basic
+from dnc_leftover_service.letfover_service import FIFO_leftover_service_pwl
+
 import dnc_operations.function_invert
 
 from plotter import create_plots
@@ -16,6 +19,7 @@ from plotter import custum_plots
 from plotter import interactive_plots
 
 import os
+import numpy as np
 import time
 
 
@@ -23,6 +27,14 @@ def show_arrival_and_service_curve():
     create_plots.plot_arrival_and_service_curve(arrival_curve=pwl_ac,
                                                 service_curve=pwl_sc,
                                                 x_axis_max=25, y_axis_max=25)
+
+
+def show_leftover_service_curve(theta: float):
+    leftover_service_curve = FIFO_leftover_service_pwl(cross_flow=pwl_ac, service_curve=pwl_sc, theta=theta)
+    print("Leftover Service Curve:")
+    leftover_service_curve.print_all_information()
+    create_plots.plot_leftover_service_curve(leftover_service_curve=leftover_service_curve, used_theta=theta,
+                                             x_axis_max=35, y_axis_max=25, arrival_curve=pwl_ac)
 
 
 def show_backlog_bound():
@@ -72,6 +84,7 @@ def show_interactive_plot():
 
 
 if __name__ == '__main__':
+    """
     tb1 = TokenBucketArrivalCurve(rate=2.5, burst=2)
     tb2 = TokenBucketArrivalCurve(rate=1.1, burst=6)
     tb3 = TokenBucketArrivalCurve(rate=0.5, burst=10)
@@ -81,14 +94,34 @@ if __name__ == '__main__':
     rl1 = RateLatencyServiceCurve(rate=1.0, latency=3)
     rl2 = RateLatencyServiceCurve(rate=1.5, latency=7)
     rl3 = RateLatencyServiceCurve(rate=2.5, latency=12)
-    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2, rl3])
+    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
     pwl_sc.print_all_information()
+    """
+    # jump at theta = 4.25
+    tb1 = TokenBucketArrivalCurve(rate=2.0, burst=5)
+    tb2 = TokenBucketArrivalCurve(rate=1.0, burst=10)
+    pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+    pwl_ac.print_all_information()
+
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=1)
+    rl2 = RateLatencyServiceCurve(rate=4.0, latency=7)
+    pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
+    pwl_sc.print_all_information()
+    # """
+
+    print("---------------")
 
     # show_arrival_and_service_curve()
 
+    # show_interactive_plot()
+
+    show_leftover_service_curve(theta=(8+1/4))
+
+    # show_max_bp()
+
     # show_backlog_bound()
 
-    show_delay_bound()
+    # show_delay_bound()
 
     # show_arrival_and_service_curve()
 
@@ -96,4 +129,5 @@ if __name__ == '__main__':
 
     # show_deconvolution()
 
-    # show_interactive_plot()
+
+

@@ -44,8 +44,14 @@ def max_length_backlogged_period(arrival_curve: PiecewiseLinearArrivalCurve,
         if alpha >= beta:
             C.append(j)
 
-    ta = max(A)
-    uc = max(C)
+    if len(A) > 0:
+        ta = max(A)
+    else:
+        ta = 0
+    if len(C) > 0:
+        uc = max(C)
+    else:
+        uc = service_curve.get_initial_latency()
 
     gamma = arrival_curve.get_used_gamma(ta)
     rho = service_curve.get_used_rho(uc)

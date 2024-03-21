@@ -2,6 +2,7 @@ from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_service.service_curve import ServiceCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
+from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 from dnc_operations import convolution, deconvolution
 
 from bokeh.plotting import figure
@@ -43,6 +44,28 @@ def add_service_curve(p: figure, service_curve: ServiceCurve, x_max: int):
         value_data.append(service_curve.calculate_function_value(t))
 
     p.line(t_data, value_data, color="red", line_width=2)
+
+
+def add_leftover_service_curve(p: figure, leftover_service_curve: PiecewiseLinearServiceCurve, used_theta: float,
+                               x_max:int):
+    t_data_before_theta = []
+    value_data_before_theta = []
+
+    t_data_after_theta = []
+    value_data_after_theta = []
+    for t in list(np.arange(0, x_max + 0.001, 0.001)):
+        if t <= used_theta:
+            t_data_before_theta.append(t)
+            value_data_before_theta.append(0)
+        else:
+            t_data_after_theta.append(t)
+            value_data_after_theta.append(leftover_service_curve.calculate_function_value(t=t))
+
+    p.line(t_data_before_theta, value_data_before_theta, color="red", line_width=2)
+    p.line(t_data_after_theta, value_data_after_theta, color="red", line_width=2)
+
+    p.segment(x0=used_theta, y0=0, x1=used_theta, y1=value_data_after_theta[0], line_width=2,
+              line_dash='dotted', line_color='red')
 
 
 def add_deconvolution_n2(p: figure, arrival_curve: PiecewiseLinearArrivalCurve,

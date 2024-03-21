@@ -35,7 +35,7 @@ def plot_interactive_backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve,
     ac_data_range = x_axis_max
     ac_data_start = -ac_data_range
     ac_data_end = ac_data_range
-    ac_data_step = 0.5
+    ac_data_step = 0.25
     index_f_0 = ac_data_range / ac_data_step
     ac_and_bb_data = create_ac_and_bb_data(arrival_curve=arrival_curve, service_curve=service_curve,
                                            x_axis_max=x_axis_max,

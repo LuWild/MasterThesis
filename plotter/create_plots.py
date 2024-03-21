@@ -3,6 +3,7 @@ from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
+from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 
 from bokeh.plotting import figure, show, output_file
 from bokeh.io import export_svg
@@ -36,6 +37,39 @@ def plot_arrival_and_service_curve(arrival_curve: ArrivalCurve,
     p.width = 1000
 
     show(p)
+
+
+def plot_leftover_service_curve(leftover_service_curve: PiecewiseLinearServiceCurve, used_theta: float,
+                                x_axis_max: int, y_axis_max: int, arrival_curve=None, cross_flow=None):
+    x_axis_min = -1
+
+    p = figure(title="Leftover Service Curve", x_axis_label="t", y_axis_label="y")
+
+    if arrival_curve is not None:
+        plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_max)
+    if cross_flow is not None:
+        plot_helper.add_arrival_curve(p=p, arrival_curve=cross_flow, x_max=x_axis_max)
+    plot_helper.add_leftover_service_curve(p=p, leftover_service_curve=leftover_service_curve, used_theta=used_theta,
+                                           x_max=x_axis_max)
+
+    # plot settings
+    p.x_range.start = x_axis_min - 1
+    p.x_range.end = x_axis_max + 1
+    # """
+    p.yaxis.fixed_location = 0
+    p.y_range.start = 0
+    p.y_range.end = y_axis_max
+
+    p.height = 600
+    p.width = 1000
+
+    # show the results
+    output_file(filename="output/html_files/leftover_service_curve.html")
+    show(p)
+
+    # export .svg
+    p.output_backend = "svg"
+    export_svg(p, filename="output/svg_files/leftover_service_curve.svg")
 
 
 def plot_backlog_bound(arrival_curve: ArrivalCurve,
