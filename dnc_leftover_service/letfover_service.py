@@ -9,6 +9,9 @@ from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_sh
 from dnc_operations.max_length_backlogged_period import max_length_backlogged_period
 
 from typing import List
+import csv
+import numpy as np
+import os
 
 
 def FIFO_leftover_service_basic(cross_flow: TokenBucketArrivalCurve, service_curve: RateLatencyServiceCurve, theta=0.0):
@@ -19,30 +22,29 @@ def FIFO_leftover_service_basic(cross_flow: TokenBucketArrivalCurve, service_cur
     b = cross_flow.burst
 
     new_R = R - r
-    new_T = (b + R * T - r * theta) / (R - r)
+    if R != r:
+        new_T = (b + R * T - r * theta) / (R - r)
+    else:
+        new_T = -1.0
 
     return RateLatencyServiceCurve(rate=new_R, latency=new_T)
 
 
 def FIFO_leftover_service_pwl(cross_flow: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
-                              theta=0.0):
-    print("Starting FIFO Leftover Service calculation (PWL)...")
+                              theta=0.0, print_information=True):
     # alpha(t-theta) -> shifted_alpha(t)
     cross_flow_shifted_by_theta = piecewise_linear_arrival_curve_shift(arrival_curve=cross_flow, t_shift=-theta)
+    cross_flow.shift = theta
 
     # []^+: beta(t) >= shifted_alpha(t) at t = max_backlogged_period
     # --> check sections of beta and the respective sections of shifted_alpha and use FIFO_leftover_service_basic for
     # each section pair (beta_{R,T} and gamma)
 
-    max_bp = max_length_backlogged_period(arrival_curve=cross_flow_shifted_by_theta, service_curve=service_curve)
-    print("Max length of backlogged period: " + str(max_bp))
-
-    print("Min Latency Theta: " +
-          str(get_optimal_theta_for_min_latency(service_curve=service_curve, cross_flow=cross_flow)))
+    max_bp = max_length_backlogged_period(arrival_curve=cross_flow, service_curve=service_curve)
 
     relevant_sections_sc = get_relevant_sections_greater_t(input_curve=service_curve, t=max_bp)
 
-    relevant_sections_ac = get_relevant_sections_greater_t(input_curve=cross_flow_shifted_by_theta, t=max_bp)
+    relevant_sections_ac = get_relevant_sections_greater_t(input_curve=cross_flow, t=max_bp)
 
     # match relevant sections sc with relevant sections ac to use FIFO_leftover_service_basic for each section pair
     leftover_service_pwl = []
@@ -52,9 +54,11 @@ def FIFO_leftover_service_pwl(cross_flow: PiecewiseLinearArrivalCurve, service_c
         leftover_service_pwl = [
             FIFO_leftover_service_basic(cross_flow=relevant_sections_ac[0], service_curve=relevant_sections_sc[0])]
 
+        """
         print("First relevant sections:")
         relevant_sections_ac[0].print_all_information()
         relevant_sections_sc[0].print_all_information()
+        """
 
         # check if it is 0 till max_bp: so T >= max_bp
         if leftover_service_pwl[0].latency < max_bp:
@@ -68,7 +72,7 @@ def FIFO_leftover_service_pwl(cross_flow: PiecewiseLinearArrivalCurve, service_c
             # get sections and bounds for the ac_sections inside the interval bounds of the sc_section
             ac_sections_with_interval_bounds = \
                 get_ac_sections_inside_sc_section_interval_bounds(sc_interval_bounds=sc_interval_bounds,
-                                                                  arrival_curve=cross_flow_shifted_by_theta,
+                                                                  arrival_curve=cross_flow,
                                                                   ac_sections=relevant_sections_ac)
 
             for ac_section_with_interval_bounds in ac_sections_with_interval_bounds:
@@ -83,6 +87,12 @@ def FIFO_leftover_service_pwl(cross_flow: PiecewiseLinearArrivalCurve, service_c
 
                     first_section = False
 
+    leftover_service_pwl = reject_negative_rate_and_negative_latency(leftover_service_pwl)
+
+    if print_information:
+        print_important_information(service_curve=service_curve, cross_flow=cross_flow,
+                                    max_bp=max_bp, used_theta=theta)
+
     return PiecewiseLinearServiceCurve(rhos=leftover_service_pwl)
 
     # 1_{t>theta}: t<=theta = 0: jump only at this position possible
@@ -91,11 +101,13 @@ def FIFO_leftover_service_pwl(cross_flow: PiecewiseLinearArrivalCurve, service_c
 def get_optimal_theta_for_min_backlog_bound(service_curve: PiecewiseLinearServiceCurve,
                                             cross_flow: PiecewiseLinearArrivalCurve):
     min_theta = float('inf')
-    for rho in service_curve.rhos:
-        for gamma in cross_flow.gammas:
-            theta = (gamma.burst / rho.rate) + rho.latency
-            if min_theta > theta:
-                min_theta = theta
+
+    return min_theta
+
+
+def get_optimal_theta_for_min_delay_bound(service_curve: PiecewiseLinearServiceCurve,
+                                          cross_flow: PiecewiseLinearArrivalCurve):
+    min_theta = float('inf')
 
     return min_theta
 
@@ -107,13 +119,22 @@ def get_optimal_theta_for_min_latency(service_curve: PiecewiseLinearServiceCurve
     for rho in service_curve.rhos:
         gamma = cross_flow.gammas[0]
         theta = (gamma.burst / rho.rate) + rho.latency
-        if min_theta > theta:
+        if min_theta > theta >= 0:
             used_rho = rho
             min_theta = theta
 
     print("Used Rho:")
     used_rho.print_all_information()
     return min_theta
+
+
+def reject_negative_rate_and_negative_latency(list_rate_latency_service_curves: List[RateLatencyServiceCurve]):
+    to_remove = []
+    for rate_latency_service_curve in list_rate_latency_service_curves:
+        if rate_latency_service_curve.rate <= 0 or rate_latency_service_curve.latency < 0:
+            to_remove.append(rate_latency_service_curve)
+
+    return [i for i in list_rate_latency_service_curves if i not in to_remove]
 
 
 def get_ac_sections_inside_sc_section_interval_bounds(sc_interval_bounds: List[float],
@@ -192,6 +213,25 @@ def remove_intersections_before_time_t(intersections: List[float], t: float):
             intersections_to_remove.append(intersection)
 
     return [intersection for intersection in intersections if intersection not in intersections_to_remove]
+
+
+def print_important_information(service_curve: PiecewiseLinearServiceCurve,
+                                cross_flow: PiecewiseLinearArrivalCurve, max_bp: float, used_theta: float):
+    print("Starting FIFO Leftover Service calculation (PWL)...")
+    cross_flow.print_all_information()
+    print("Max length of backlogged period (theta shifted cross flow and service curve): " + str(max_bp))
+    print("Used theta: " + str(used_theta))
+    print(" ")
+    print("Calculated Optimal thetas:")
+    print("++++++++++ (Min Latency)")
+    theta_min_latency = get_optimal_theta_for_min_latency(service_curve, cross_flow)
+    print("Optimized theta (Min Latency): " + str(theta_min_latency))
+    print("++++++++++ (Backlog Bound)")
+    theta_backlog_bound = get_optimal_theta_for_min_backlog_bound(service_curve, cross_flow)
+    print("Optimized theta (Backlog Bound): " + str(theta_backlog_bound))
+    print("++++++++++ (Delay Bound)")
+    theta_delay_bound = get_optimal_theta_for_min_delay_bound(service_curve, cross_flow)
+    print("Optimized theta (Delay Bound): " + str(theta_delay_bound))
 
 
 if __name__ == '__main__':

@@ -73,9 +73,9 @@ def delay_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Piece
         intersection_used = u_min
         case = 2
 
-    print("Delay Bound Runtime: " + str(time.time() - start_time))
+    # print("Delay Bound Runtime: " + str(time.time() - start_time))
 
-    print("Delay Bound: " + str(d))
+    # print("Delay Bound: " + str(d))
 
     if create_plot:
         plot_delay_bound(arrival_curve=arrival_curve, service_curve=service_curve, ta=intersection_used, d=d,

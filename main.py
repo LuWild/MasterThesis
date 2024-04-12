@@ -11,6 +11,7 @@ from solution_checker.convolution_solution_checker import convolution_solution_c
 from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 from dnc_leftover_service.letfover_service import FIFO_leftover_service_basic
 from dnc_leftover_service.letfover_service import FIFO_leftover_service_pwl
+from dnc_leftover_service.leftover_service_brute_force import FIFO_leftover_service_pwl_brute_force_theta
 
 import dnc_operations.function_invert
 
@@ -31,10 +32,17 @@ def show_arrival_and_service_curve():
 
 def show_leftover_service_curve(theta: float):
     leftover_service_curve = FIFO_leftover_service_pwl(cross_flow=pwl_ac, service_curve=pwl_sc, theta=theta)
-    print("Leftover Service Curve:")
+    print("------------------------")
+    print("Leftover Service Curve (theta=" + str(theta) + "):")
     leftover_service_curve.print_all_information()
+
     create_plots.plot_leftover_service_curve(leftover_service_curve=leftover_service_curve, used_theta=theta,
                                              x_axis_max=35, y_axis_max=25, arrival_curve=pwl_ac)
+
+
+def show_leftover_service_curve_brute_force_theta():
+    FIFO_leftover_service_pwl_brute_force_theta(cross_flow=pwl_ac, service_curve=pwl_sc, foi=pwl_ac,
+                                                theta_interval=[0, 10], theta_step=0.01)
 
 
 def show_backlog_bound():
@@ -109,13 +117,15 @@ if __name__ == '__main__':
     pwl_sc.print_all_information()
     # """
 
-    print("---------------")
+    print("------------------------")
 
     # show_arrival_and_service_curve()
 
-    # show_interactive_plot()
+    show_interactive_plot()
 
-    show_leftover_service_curve(theta=(8+1/4))
+    show_leftover_service_curve_brute_force_theta()
+
+    show_leftover_service_curve(theta=7 + 8 / 4)
 
     # show_max_bp()
 
@@ -128,6 +138,3 @@ if __name__ == '__main__':
     # show_convolution()
 
     # show_deconvolution()
-
-
-
