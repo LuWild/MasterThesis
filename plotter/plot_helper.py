@@ -3,7 +3,7 @@ from dnc_service.service_curve import ServiceCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
-from dnc_operations import convolution, deconvolution
+from dnc_operations import convolution, deconvolution, arrival_curve_shift
 
 from bokeh.plotting import figure
 import numpy as np
@@ -19,11 +19,29 @@ def add_arrival_curve(p: figure, arrival_curve: ArrivalCurve, x_max: int):
     :param x_max: for which value the line is plotted
     :return: -
     """
-    t_data = [0]
-    value_data = [arrival_curve.get_initial_burst()]
-    for t in list(np.arange(0.01, x_max + 0.01, 0.01)):
-        t_data.append(t)
-        value_data.append(arrival_curve.calculate_function_value(t))
+    shift = arrival_curve.get_shift()
+    if shift > 0:
+        t_data_zero = []
+        value_data_zero = []
+        for t in list(np.arange(0.00, shift + 0.01, 0.01)):
+            t_data_zero.append(t)
+            value_data_zero.append(0)
+        t_data = []
+        value_data = []
+
+        p.line(t_data_zero, value_data_zero, color="blue", line_width=2)
+        p.segment(x0=shift, y0=0, x1=shift, y1=arrival_curve.get_initial_burst(), line_width=2,
+                  line_dash='dotted', line_color='blue')
+
+        for t in list(np.arange(shift + 0.01, x_max + 0.01, 0.01)):
+            t_data.append(t)
+            value_data.append(arrival_curve.calculate_function_value(t))
+    else:
+        t_data = [0]
+        value_data = [arrival_curve.get_initial_burst()]
+        for t in list(np.arange(0.01, x_max + 0.01, 0.01)):
+            t_data.append(t)
+            value_data.append(arrival_curve.calculate_function_value(t))
 
     p.line(t_data, value_data, color="blue", line_width=2)
 

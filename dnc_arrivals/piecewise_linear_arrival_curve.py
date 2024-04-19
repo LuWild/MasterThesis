@@ -5,13 +5,14 @@ from typing import List
 
 
 class PiecewiseLinearArrivalCurve(ArrivalCurve):
-    def __init__(self, gammas: List[TokenBucketArrivalCurve]):
+    def __init__(self, gammas: List[TokenBucketArrivalCurve], shift=0):
         """
         It is necessary to provide the TokenBucketArrivalCurves in normal form.
 
         :param gammas: list of TokenBucketArrivalCurves (in normal form)
         """
         self.gammas = gammas
+        self.shift = shift
         self.intersections = self.calculate_list_of_all_intersections()
 
     def calculate_function_value(self, t: float):
@@ -21,14 +22,14 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
         :param t: value t for which f(t) is calculated
         :return: the calculated value f(t) for the given t
         """
-        if t <= 0:
+        if t <= self.shift:
             return 0
         else:
             f_t_min = float('inf')
             for gamma in self.gammas:
                 r = gamma.rate
                 b = gamma.burst
-                f_t = r * t + b
+                f_t = r * (t - self.shift) + b
                 if f_t < f_t_min:
                     f_t_min = f_t
             return f_t_min
@@ -81,6 +82,16 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
             else:
                 return [0, tb1]
 
+    def set_shift(self, shift: float):
+        self.shift = shift
+        self.intersections = self.calculate_list_of_all_intersections()
+
+    def get_shift(self) -> float:
+        return self.shift
+
+    def get_gammas(self):
+        return self.gammas
+
     def print_all_information(self):
         print("PiecewiseLinearArrivalCurve Information (Object ID: " + str(id(self)) + "):")
         for i in range(len(self.gammas)):
@@ -93,6 +104,6 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
         for x in range(0, len(self.gammas) - 1):
             tb1 = self.gammas[x]
             tb2 = self.gammas[x + 1]
-            intersections.append((tb2.burst - tb1.burst) / (tb1.rate - tb2.rate))
+            intersections.append(((tb2.burst - tb1.burst) / (tb1.rate - tb2.rate)) + self.shift)
 
         return intersections

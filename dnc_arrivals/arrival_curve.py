@@ -19,5 +19,13 @@ class ArrivalCurve(ABC):
         pass
 
     @abstractmethod
+    def get_shift(self) -> float:
+        pass
+
+    @abstractmethod
+    def get_gammas(self):
+        pass
+
+    @abstractmethod
     def print_all_information(self):
         pass

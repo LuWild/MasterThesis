@@ -5,7 +5,6 @@ from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCur
 from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 
-from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 from dnc_operations.backlog_bound import backlog_bound
 
 from bokeh.plotting import figure, show, output_file
@@ -22,6 +21,8 @@ from bokeh.models import ColumnDataSource, CustomJS, Slider, SetValue, Label
 
 import numpy as np
 
+import copy
+
 
 def plot_interactive_backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve,
                                    service_curve: PiecewiseLinearServiceCurve,
@@ -29,6 +30,8 @@ def plot_interactive_backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve,
     p = figure(title="Interactive Backlog Bound (For Deconvolution)", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_service_curve(p, service_curve=service_curve, x_max=x_axis_max)
+
+    shift = arrival_curve.get_shift()
 
     t = list(np.arange(0, x_axis_max + 0.01, 0.01))
 
@@ -114,10 +117,16 @@ def create_ac_and_bb_data(arrival_curve: PiecewiseLinearArrivalCurve, service_cu
     ac_data = []
 
     for t_shift in list(np.arange(ac_data_start, ac_data_end + ac_data_step, ac_data_step)):
-        arrival_curves.append(piecewise_linear_arrival_curve_shift(arrival_curve=arrival_curve, t_shift=t_shift))
+        shifted_arrival_curve = copy.deepcopy(arrival_curve)
+        shifted_arrival_curve.set_shift(shift=t_shift)
+        arrival_curves.append(shifted_arrival_curve)
+        # arrival_curves.append(piecewise_linear_arrival_curve_shift(arrival_curve=arrival_curve, t_shift=t_shift))
 
     for ac in arrival_curves:
-        ac_values = [ac.get_initial_burst()]
+        if ac.get_shift() == 0:
+            ac_values = [ac.get_initial_burst()]
+        else:
+            ac_values = []
         for t in time:
             ac_values.append(ac.calculate_function_value(t))
         ac_data.append(ac_values)

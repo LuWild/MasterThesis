@@ -8,7 +8,6 @@ from dnc_operations.delay_bound import delay_bound_brute_force
 from dnc_operations.max_length_backlogged_period import max_length_backlogged_period
 from solution_checker.deconvolution_solution_checker import deconvolution_solution_check
 from solution_checker.convolution_solution_checker import convolution_solution_check
-from dnc_operations.arrival_curve_shift import piecewise_linear_arrival_curve_shift
 from dnc_leftover_service.letfover_service import FIFO_leftover_service_basic
 from dnc_leftover_service.letfover_service import FIFO_leftover_service_pwl
 from dnc_leftover_service.leftover_service_brute_force import FIFO_leftover_service_pwl_brute_force_theta
@@ -105,10 +104,11 @@ if __name__ == '__main__':
     pwl_sc = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
     pwl_sc.print_all_information()
     """
-    # jump at theta = 4.25
+
     tb1 = TokenBucketArrivalCurve(rate=2.0, burst=5)
     tb2 = TokenBucketArrivalCurve(rate=1.0, burst=10)
     pwl_ac = PiecewiseLinearArrivalCurve(gammas=[tb1, tb2])
+    # pwl_ac.set_shift(shift=3)
     pwl_ac.print_all_information()
 
     rl1 = RateLatencyServiceCurve(rate=1.0, latency=1)
@@ -121,11 +121,11 @@ if __name__ == '__main__':
 
     # show_arrival_and_service_curve()
 
-    show_interactive_plot()
+    # show_interactive_plot()
 
     show_leftover_service_curve_brute_force_theta()
 
-    show_leftover_service_curve(theta=7 + 8 / 4)
+    show_leftover_service_curve(theta=6.750)
 
     # show_max_bp()
 
@@ -138,3 +138,8 @@ if __name__ == '__main__':
     # show_convolution()
 
     # show_deconvolution()
+
+    print("1:" + str(5 / 1 + 1))
+    print("2:" + str(5 / 4 + 7))
+    print("3:" + str(10 / 1 + 1))
+    print("4:" + str(10 / 4 + 7))

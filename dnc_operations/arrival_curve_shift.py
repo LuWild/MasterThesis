@@ -1,7 +1,17 @@
 import copy
 
+from dnc_arrivals.arrival_curve import ArrivalCurve
 from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
+
+
+def arrival_curve_shift(arrival_curve: ArrivalCurve, t_shift: float):
+    if type(arrival_curve) is PiecewiseLinearArrivalCurve:
+        return piecewise_linear_arrival_curve_shift(
+            arrival_curve=PiecewiseLinearArrivalCurve(gammas=arrival_curve.get_gammas(),
+                                                      shift=arrival_curve.get_shift()), t_shift=t_shift)
+    else:
+        return token_bucket_arrival_curve_shift(arrival_curve=arrival_curve.get_gammas(), t_shift=t_shift)
 
 
 def piecewise_linear_arrival_curve_shift(arrival_curve: PiecewiseLinearArrivalCurve, t_shift: float):

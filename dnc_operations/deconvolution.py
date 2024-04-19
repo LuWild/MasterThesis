@@ -77,18 +77,22 @@ def deconvolution(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Pie
 
     row_data = [str(t), str(a)]
 
-    file_name = "output/csv_files/a_of_t_deconvolution.csv"
-    if os.path.isfile(file_name):
-        with open(file_name, 'a', newline='') as file:
-            csv.writer(file).writerow(row_data)
-    else:
-        with open(file_name, 'w', newline='') as file:
-            writer = csv.writer(file)
+    file_path = "output/csv_files/a_of_t_deconvolution.csv"
+    try:
+        if os.path.exists(file_path):
 
-            column_names = ["t", "a"]
-            writer.writerow(column_names)
-            writer.writerow(row_data)
-        time.sleep(4)
+            os.chmod(file_path, 0o666)
+        else:
+            print("File not found:", file_path)
+    except PermissionError:
+        print("Permission denied: You don't have the necessary permissions to change the permissions of this file.")
+
+    with open(file_path, "w") as file:
+        writer = csv.writer(file)
+
+        column_names = ["t", "a"]
+        writer.writerow(column_names)
+        writer.writerow(row_data)
 
     return q_and_a[0]
 
