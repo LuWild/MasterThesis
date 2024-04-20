@@ -58,7 +58,8 @@ def max_length_backlogged_period(arrival_curve: PiecewiseLinearArrivalCurve,
 
     rx = gamma.rate
     bx = gamma.burst
+    shift = arrival_curve.get_shift()
     Ry = rho.rate
     Ty = rho.latency
 
-    return (bx + Ry * Ty) / (Ry - rx)
+    return (bx + Ry * Ty - rx * shift) / (Ry - rx)
