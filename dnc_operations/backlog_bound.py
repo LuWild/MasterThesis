@@ -1,10 +1,7 @@
-from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
-
 from plotter.create_plots import plot_backlog_bound
-
 import copy
 
 
@@ -50,11 +47,14 @@ def backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Pie
             else:
                 a = T
             q = gamma.calculate_function_value(a) - rho.calculate_function_value(a)
+            if q < 0:
+                q = -q
             break
 
     if deconvolution_case:
         return [q, a]
     else:
+        #print("Backlog Bound: " + str(q))
         if create_plot:
             plot_backlog_bound(arrival_curve=arrival_curve, service_curve=service_curve, backlog_bound_t=a,
                                x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max)

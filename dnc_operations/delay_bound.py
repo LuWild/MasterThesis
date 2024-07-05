@@ -1,13 +1,8 @@
-from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 import dnc_operations.function_invert
-
-from plotter.create_plots import plot_delay_bound
-
 import numpy as np
-
 import time
 
 
@@ -25,8 +20,10 @@ def delay_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: RateL
     print("Delay Bound: " + str(d))
 
     if create_plot:
+        from plotter.create_plots import plot_delay_bound
         plot_delay_bound(arrival_curve=arrival_curve, service_curve=service_curve, ta=ta, d=d,
                          x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max)
+        return d
     else:
         return d
 
@@ -68,20 +65,24 @@ def delay_bound(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: Piece
         d = d_alpha
         intersection_used = t_min
         case = 1
+        result_for_losc = [case, t_min]
     else:
         d = d_beta
         intersection_used = u_min
         case = 2
+        result_for_losc = [case, u_min]
 
     # print("Delay Bound Runtime: " + str(time.time() - start_time))
 
     # print("Delay Bound: " + str(d))
 
     if create_plot:
+        from plotter.create_plots import plot_delay_bound
         plot_delay_bound(arrival_curve=arrival_curve, service_curve=service_curve, ta=intersection_used, d=d,
                          x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max, case=case)
+        return [d, result_for_losc]
     else:
-        return d
+        return [d, result_for_losc]
 
 
 def delay_bound_brute_force(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
@@ -118,7 +119,9 @@ def delay_bound_brute_force(arrival_curve: PiecewiseLinearArrivalCurve, service_
     print("Delay Bound (Brute Force): " + str(d))
 
     if create_plot:
+        from plotter.create_plots import plot_delay_bound
         plot_delay_bound(arrival_curve=arrival_curve, service_curve=service_curve, ta=ta, d=d,
                          x_axis_max=plot_x_axis_max, y_axis_max=plot_y_axis_max, case=case)
+        return d
     else:
         return d
