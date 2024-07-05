@@ -20,18 +20,42 @@ class TokenBucketArrivalCurve(ArrivalCurve):
             return self.rate * (t - self.shift) + self.burst
 
     def get_initial_burst(self) -> float:
+        """
+        :return: initial burst
+        """
         return self.burst
 
     def get_used_gamma(self, t: float):
+        """
+        :return: this TokenBucketArrivalCurve.
+        """
         return self
 
+    def set_shift(self, shift: float):
+        """
+        Set the shift of the TokenBucketArrivalCurve f(t-shift).
+
+        :param shift: amount that is shifted.
+        :return: shifts the TokenBucketArrivalCurve.
+        """
+        self.shift = shift
+
     def get_shift(self) -> float:
+        """
+        :return: amount that was shifted.
+        """
         return self.shift
 
     def get_gammas(self):
+        """
+        :return: this TokenBucketArrivalCurve.
+        """
         return self
 
     def print_all_information(self):
+        """
+        Prints all important information about this TokenBucketArrivalCurve.
+        """
         print("TokenBucketArrivalCurve Information (Object ID: " + str(id(self)) + "):")
         print("rate = " + str(self.rate) + " ; burst = " + str(self.burst))
 

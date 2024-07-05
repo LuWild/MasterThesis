@@ -7,7 +7,7 @@ from typing import List
 class PiecewiseLinearArrivalCurve(ArrivalCurve):
     def __init__(self, gammas: List[TokenBucketArrivalCurve], shift=0):
         """
-        It is necessary to provide the TokenBucketArrivalCurves in normal form.
+        It is necessary to provide the PiecewiseLinearArrivalCurve in normal form.
 
         :param gammas: list of TokenBucketArrivalCurves (in normal form)
         """
@@ -35,6 +35,9 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
             return f_t_min
 
     def get_initial_burst(self) -> float:
+        """
+        :return: initial burst
+        """
         return self.gammas[0].burst
 
     def get_used_gamma(self, t: float):
@@ -83,16 +86,33 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
                 return [0, tb1]
 
     def set_shift(self, shift: float):
+        """
+        Set the shift of the PiecewiseLinearArrivalCurve f(t-shift).
+
+        :param shift: amount that is shifted.
+        :return: shifts the PiecewiseLinearArrivalCurve.
+        """
         self.shift = shift
         self.intersections = self.calculate_list_of_all_intersections()
+        for gamma in self.gammas:
+            gamma.set_shift(shift=shift)
 
     def get_shift(self) -> float:
+        """
+        :return: amount that was shifted.
+        """
         return self.shift
 
-    def get_gammas(self):
+    def get_gammas(self) -> List[TokenBucketArrivalCurve]:
+        """
+        :return: List of TokenBucketArrivalCurves.
+        """
         return self.gammas
 
     def print_all_information(self):
+        """
+        Prints all important information about this PiecewiseLinearArrivalCurve.
+        """
         print("PiecewiseLinearArrivalCurve Information (Object ID: " + str(id(self)) + "):")
         for i in range(len(self.gammas)):
             gamma = self.gammas[i]
@@ -100,6 +120,11 @@ class PiecewiseLinearArrivalCurve(ArrivalCurve):
         print("intersections: " + str(self.intersections))
 
     def calculate_list_of_all_intersections(self):
+        """
+        Creating a list of all intersections of this PiecewiseLinearArrivalCurve.
+
+        :return: List of all intersections.
+        """
         intersections = []
         for x in range(0, len(self.gammas) - 1):
             tb1 = self.gammas[x]
