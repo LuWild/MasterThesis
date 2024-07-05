@@ -4,7 +4,6 @@ from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCu
 from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
-
 from bokeh.plotting import figure, show, output_file
 from bokeh.io import export_svg
 from typing import List
@@ -36,7 +35,13 @@ def plot_arrival_and_service_curve(arrival_curve: ArrivalCurve,
     p.height = 600
     p.width = 1000
 
+    # show the results
+    output_file(filename="output/html_files/arrival_and_service_curve.html")
     show(p)
+
+    # export .svg
+    p.output_backend = "svg"
+    export_svg(p, filename="output/svg_files/arrival_and_service_curve.svg")
 
 
 def plot_leftover_service_curve(leftover_service_curve: PiecewiseLinearServiceCurve, used_theta: float,

@@ -27,7 +27,7 @@ import copy
 def plot_interactive_backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve,
                                    service_curve: PiecewiseLinearServiceCurve,
                                    x_axis_max: int, y_axis_max: int):
-    p = figure(title="Interactive Backlog Bound (For Deconvolution)", x_axis_label="t", y_axis_label="y")
+    p = figure(title="Interactive Backlog Bound", x_axis_label="t", y_axis_label="y")
 
     plot_helper.add_service_curve(p, service_curve=service_curve, x_max=x_axis_max)
 
@@ -107,6 +107,8 @@ def plot_interactive_backlog_bound(arrival_curve: PiecewiseLinearArrivalCurve,
 
     # show the results
     show(column(p, slider))
+    p.output_backend = "svg"
+    export_svg(p, filename="output/svg_files/interactive_plot.svg")
 
 
 def create_ac_and_bb_data(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: PiecewiseLinearServiceCurve,
