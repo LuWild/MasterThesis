@@ -1,5 +1,4 @@
 from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
-from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 from plotter.plot_helper import *
 
 from bokeh.plotting import figure, show, output_file
@@ -14,11 +13,12 @@ import chromedriver_binary  # Adds chromedriver binary to path
 
 def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: ServiceCurve,
                                  t_start: float, t_end: float, t_step: float,
-                                 s_start: float, s_end: float, s_step: float):
+                                 s_start: float, s_end: float, s_step: float, get_data=False):
     """
     Brute forced way to calculate the deconvolution (n=2). Checks all combinations of t and s.
     Creates a .svg and a .html with the plot and a .csv with the values and calculation results.
 
+    :param get_data: if True, then return data
     :param arrival_curve: PiecewiseLinearArrivalCurve
     :param service_curve: RateLatencyServiceCurve
     :param t_start: start value for t
@@ -67,8 +67,12 @@ def deconvolution_solution_check(arrival_curve: ArrivalCurve, service_curve: Ser
     """
 
     plot_data = [t_values, function_values]
-    create_plot(arrival_curve=arrival_curve, service_curve=service_curve,
-                data=plot_data, x_axis_range=[int(t_start) - 1, int(t_end) + 1], y_axis_max=25)
+
+    if get_data:
+        return plot_data
+    else:
+        create_plot(arrival_curve=arrival_curve, service_curve=service_curve,
+                    data=plot_data, x_axis_range=[int(t_start) - 1, int(t_end) + 1], y_axis_max=25)
 
     # print_important_information(arrival_curve=arrival_curve, service_curve=service_curve)
 
@@ -88,7 +92,7 @@ def create_csv_file(file_name: str, column_names: List[str], data: List[list]):
 
 def create_plot(arrival_curve: ArrivalCurve, service_curve: ServiceCurve, data: List[list],
                 x_axis_range: List[int], y_axis_max: int):
-    p = figure(title="Deconvolution Solution Checker", x_axis_label="x", y_axis_label="y")
+    p = figure(title="Deconvolution", x_axis_label="x", y_axis_label="y")
 
     add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=x_axis_range[1] - 1)
     add_service_curve(p=p, service_curve=service_curve, x_max=x_axis_range[1] - 1)
