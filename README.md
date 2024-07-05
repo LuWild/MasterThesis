@@ -1,6 +1,6 @@
 # Deterministic Network Calculus with Piecewise Linear Curves
 
-Performance bound calculations with visualization is implemented in this toolbox. The focus is on piecewise linear (PWL) arrival and service curves in a single flow single server setting.
+Performance bound calculations with visualizations are implemented in this toolbox. The focus is on piecewise linear (PWL) arrival and service curves in a single flow single server setting.
 
 ## Prerequisites
 
