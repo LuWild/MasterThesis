@@ -1,7 +1,11 @@
-from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
 from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
-from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
-from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
+
+from dnc_service.service_curve import ServiceCurve
+
+from dnc_operations.backlog_bound import backlog_bound
+from dnc_operations.delay_bound import delay_bound
+from dnc_operations.max_length_backlogged_period import max_length_backlogged_period
+from solution_checker.deconvolution_solution_checker import deconvolution_solution_check
 
 from plotter import plot_helper
 
@@ -56,6 +60,45 @@ def custom_plot_a_of_t(x_axis_range=[-15, 25], y_axis_max=25):
     export_svg(p, filename="output/svg_files/custom_plot_a_of_t.svg")
 
 
+def plot_example(arrival_curve: PiecewiseLinearArrivalCurve, service_curve: ServiceCurve, chapter: int):
+    p = figure(title="Example Chapter "+str(chapter), x_axis_label="t", y_axis_label="y")
+
+    plot_helper.add_arrival_curve(p=p, arrival_curve=arrival_curve, x_max=25)
+    plot_helper.add_service_curve(p=p, service_curve=service_curve, x_max=25)
+
+    delay_bound_result = delay_bound(arrival_curve=arrival_curve, service_curve=service_curve)
+    plot_helper.add_delay_bound(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
+                                ta=delay_bound_result[1][1], d=delay_bound_result[0], case=delay_bound_result[1][0])
+
+    q_and_a = backlog_bound(arrival_curve=arrival_curve, service_curve=service_curve, deconvolution_case=True)
+    plot_helper.add_backlog_bound(p=p, arrival_curve=arrival_curve, service_curve=service_curve,
+                                  backlog_bound_t=q_and_a[1])
+
+    bp = max_length_backlogged_period(arrival_curve=arrival_curve, service_curve=service_curve)
+    p.segment(x0=bp, y0=0, x1=bp, y1=arrival_curve.calculate_function_value(bp), line_width=2,
+              line_dash='dotted', line_color='purple')
+
+    deconvolution_data = deconvolution_solution_check(arrival_curve=arrival_curve, service_curve=service_curve,
+                                                      t_start=0, t_end=25, t_step=0.01,
+                                                      s_start=0, s_end=25, s_step=0.1, get_data=True)
+
+    p.line(deconvolution_data[0], deconvolution_data[1], color="green", line_width=2)
+
+    # plot settings
+    p.x_range.start = 0 - 1
+    p.x_range.end = 25 + 1
+    # """
+    p.yaxis.fixed_location = 0
+    p.y_range.start = 0
+    p.y_range.end = 25
+
+    p.height = 600
+    p.width = 1000
+
+    # show the results
+    show(p)
+
+
 def custom_plot():
     from bokeh.layouts import column, row
     from bokeh.models import ColumnDataSource, CustomJS, Slider, SetValue
@@ -97,4 +140,4 @@ def custom_plot():
 
 
 if __name__ == '__main__':
-    custom_plot()
+    custom_plot_a_of_t()
