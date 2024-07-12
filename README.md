@@ -40,7 +40,7 @@ Each plot will be opened in your browser.
 
 ## Using the Examples
 
-To use one of the two examples referenced in the master thesis, open the file `numerical_example_chapter_3.py` or `numerical_example_chapter_4.py` directly.
+To use one of the two examples referenced in the master thesis, open the file `numerical_example_chapter_3.py`, `numerical_example_chapter_4.py` or `numerical_example_chapter_7.py` directly.
 
 Then run the code of the file and the resulting plot will be opened in your browser.
 
