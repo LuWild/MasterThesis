@@ -1,9 +1,8 @@
-from dnc_arrivals.token_bucket_arrival_curve import TokenBucketArrivalCurve
-from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 from convolution_two_convex_pwl import create_convolution
-from bokeh.plotting import figure, show, output_file
+from bokeh.plotting import figure, show
+from bokeh.io import export_svg
 from typing import List
 import numpy as np
 
@@ -12,32 +11,35 @@ import chromedriver_binary  # Adds chromedriver binary to path
 
 
 def finite_shared_buffer_pwl(beta1: PiecewiseLinearServiceCurve, beta2: PiecewiseLinearServiceCurve, buffer_size: float,
-                             x_axis_max=25, y_axis_max=25):
+                             x_axis_max=50, y_axis_max=50):
 
     B = buffer_size
 
     beta_FB = create_convolution(service_curve1=beta1, service_curve2=beta2)
 
+    print("........... convolution of the PWL SCs from above: ")
     beta_FB.print_all_information()
+
+    T = beta_FB.get_initial_latency()
 
     time = []
     data_list = []
     for t in list(np.arange(0, x_axis_max + 0.01, 0.01)):
         time.append(t)
 
-    for n in range(0, 5):
+    for n in range(0, 9):
         data = []
-        beta_FB.set_shift(n)
-        beta_FB.print_all_information()
+        beta_FB.set_shift((n * T))
         for t in list(np.arange(0, x_axis_max + 0.01, 0.01)):
             data.append(n * B + beta_FB.calculate_function_value(t))
         data_list.append(data)
+        beta_FB.set_shift(-(n * T))
 
     plot(time=time, data_list=data_list, x_axis_max=x_axis_max, y_axis_max=y_axis_max)
 
 
 def finite_shared_buffer_rl(beta1: RateLatencyServiceCurve, beta2: RateLatencyServiceCurve, buffer_size: float,
-                            x_axis_max=25, y_axis_max=25):
+                            x_axis_max=50, y_axis_max=50):
     R1 = beta1.rate
     T1 = beta1.latency
     R2 = beta2.rate
@@ -55,7 +57,7 @@ def finite_shared_buffer_rl(beta1: RateLatencyServiceCurve, beta2: RateLatencySe
     for t in list(np.arange(0, x_axis_max + 0.01, 0.01)):
         time.append(t)
 
-    for n in range(0, 5):
+    for n in range(0, 9):
         data = []
         for t in list(np.arange(0, x_axis_max + 0.01, 0.01)):
             beta_FB.latency = (n+1) * T
@@ -85,6 +87,26 @@ def plot(time: List[float], data_list: List[List[float]], x_axis_max, y_axis_max
     # show the results
     show(p)
 
+    p.output_backend = "svg"
+    export_svg(p, filename="finite_shared_buffer_svg.svg")
+
+
+def relation_checker(beta1: PiecewiseLinearServiceCurve, beta2: PiecewiseLinearServiceCurve, buffer_size: float):
+    B = buffer_size
+
+    beta_FB = create_convolution(service_curve1=beta1, service_curve2=beta2)
+
+    R = beta_FB.rhos[-1].rate
+    T = beta_FB.get_initial_latency()
+
+    print("__________________________________")
+    print("B = " + str(B) + "; R * T = " + str(R) + " * " + str(T) + " = " + str(R*T))
+
+    if B < R * T:
+        print("B < R * T")
+    else:
+        print("B >= R * T")
+
 
 if __name__ == '__main__':
 
@@ -92,19 +114,20 @@ if __name__ == '__main__':
     b2 = RateLatencyServiceCurve(rate=2, latency=1)
     B = 3
 
-    finite_shared_buffer_rl(beta1=b1, beta2=b2, buffer_size=B)
+    # finite_shared_buffer_rl(beta1=b1, beta2=b2, buffer_size=B)
 
     rl1 = RateLatencyServiceCurve(rate=0.5, latency=1)
-    rl2 = RateLatencyServiceCurve(rate=1.25, latency=4)
+    rl2 = RateLatencyServiceCurve(rate=1.5, latency=4)
     pwl_sc1 = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
     pwl_sc1.print_all_information()
 
-    rl1 = RateLatencyServiceCurve(rate=1.0, latency=1)
-    rl2 = RateLatencyServiceCurve(rate=2.5, latency=7)
+    rl1 = RateLatencyServiceCurve(rate=1.0, latency=1+1)
+    rl2 = RateLatencyServiceCurve(rate=2.5, latency=7+1)
     pwl_sc2 = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
     pwl_sc2.print_all_information()
-    B = 3
+    B = 5
 
     finite_shared_buffer_pwl(beta1=pwl_sc1, beta2=pwl_sc2, buffer_size=B)
+    relation_checker(beta1=pwl_sc1, beta2=pwl_sc2, buffer_size=B)
 
 

@@ -1,4 +1,3 @@
-from dnc_arrivals.piecewise_linear_arrival_curve import PiecewiseLinearArrivalCurve
 from dnc_service.rate_latency_service_curve import RateLatencyServiceCurve
 from dnc_service.piecewise_linear_service_curve import PiecewiseLinearServiceCurve
 
@@ -31,7 +30,6 @@ def create_convolution(service_curve1: PiecewiseLinearServiceCurve, service_curv
 
 
 def get_self_convolution():
-    # TODO
     print("This Case is TODO.")
 
 
@@ -97,8 +95,4 @@ if __name__ == '__main__':
     pwl_sc2 = PiecewiseLinearServiceCurve(rhos=[rl1, rl2])
     pwl_sc2.print_all_information()
 
-    test = create_convolution(service_curve1=pwl_sc1, service_curve2=pwl_sc2)
-    create_convolution(service_curve1=test, service_curve2=test).print_all_information()
-
-
-
+    create_convolution(service_curve1=pwl_sc1, service_curve2=pwl_sc2).print_all_information()

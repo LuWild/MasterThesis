@@ -29,7 +29,7 @@ class PiecewiseLinearServiceCurve(ServiceCurve):
             for piece in self.rhos:
                 R = piece.rate
                 T = piece.latency
-                f_t = R * ((t - self.shift) - T)
+                f_t = R * (t - T)
                 if f_t > f_t_max:
                     f_t_max = f_t
             return f_t_max
