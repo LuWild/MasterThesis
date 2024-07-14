@@ -9,7 +9,7 @@ Performance bound calculations with visualizations are implemented in this toolb
 
 ## Introduction
 
-The easiest start is to use `main.py`. Create a arrival curve and service curve:
+The easiest start is to use `main.py`. Create an arrival curve and a service curve:
 
 ```python
 tb1 = TokenBucketArrivalCurve(rate=2.0, burst=3)
@@ -40,7 +40,7 @@ Each plot will be opened in your browser.
 
 ## Using the Examples
 
-To use one of the two examples referenced in the master thesis, open the file `numerical_example_chapter_3.py` or `numerical_example_chapter_4.py` directly.
+To use one of the two examples referenced in the master thesis, open the file `numerical_example_chapter_3.py`, `numerical_example_chapter_4.py` or `numerical_example_chapter_7.py` directly.
 
 Then run the code of the file and the resulting plot will be opened in your browser.
 
